@@ -15,7 +15,7 @@ import javafx.stage.Stage; // Importa per rappresentare la finestra principale
 import javafx.stage.Screen; // Importa per ottenere informazioni sullo schermo
 import java.util.Objects; // Importa per confronti e manipolazioni di oggetti null-safe
 
-// Classe che rappresenta la boundary del pattern Singleton HAHAHAHAHA
+// Classe che rappresenta la boundary del pattern Singleton
 public class StartupSettingsBoundary extends Application {
     private StartupSettingsController controller; // Riferimento al controller, che gestirà la logica applicativa
 
