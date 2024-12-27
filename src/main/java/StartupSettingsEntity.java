@@ -1,4 +1,8 @@
-public class StartupSettingsEntity {
+import java.io.Serializable;
+
+public class StartupSettingsEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     // Istanza unica della classe (Singleton)
     private static StartupSettingsEntity instance;
 

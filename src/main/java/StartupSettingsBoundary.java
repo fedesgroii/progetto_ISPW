@@ -1,80 +1,95 @@
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import javafx.stage.Screen;
+import javafx.application.Application; // Importa la classe base per un'applicazione JavaFX
+import javafx.geometry.Insets; // Importa per gestire i margini interni (padding)
+import javafx.geometry.Pos; // Importa per gestire l'allineamento dei componenti
+import javafx.scene.Scene; // Importa la classe per gestire la scena
+import javafx.scene.control.Button; // Importa il pulsante
+import javafx.scene.control.CheckBox; // Importa la casella di controllo
+import javafx.scene.control.RadioButton; // Importa il pulsante di scelta
+import javafx.scene.control.ToggleGroup; // Importa il gruppo di pulsanti di scelta (esclusivi)
+import javafx.scene.image.Image; // Importa la classe per gestire immagini
+import javafx.scene.image.ImageView; // Importa per visualizzare le immagini
+import javafx.scene.layout.HBox; // Importa per creare un contenitore orizzontale
+import javafx.scene.layout.VBox; // Importa per creare un contenitore verticale
+import javafx.scene.text.Text; // Importa per visualizzare testo
+import javafx.stage.Stage; // Importa per rappresentare la finestra principale
+import javafx.stage.Screen; // Importa per ottenere informazioni sullo schermo
+import java.util.Objects; // Importa per confronti e manipolazioni di oggetti null-safe
 
-import java.util.Objects;
-
+// Classe che rappresenta la boundary del pattern Singleton
 public class StartupSettingsBoundary extends Application {
-    private StartupSettingsController controller; // Riferimento al controller
+    private StartupSettingsController controller; // Riferimento al controller, che gestirà la logica applicativa
 
     @Override
     public void start(Stage primaryStage) {
-        // Inizializza il controller
-        controller = new StartupSettingsController();
+        // Metodo principale chiamato da JavaFX per avviare l'interfaccia
 
-        // Imposta il titolo della finestra
-        primaryStage.setTitle("Configurazione Avvio");
+        controller = new StartupSettingsController(); // Crea un'istanza del controller per gestire le azioni dell'utente
 
-        // Contenitore principale
-        VBox container = new VBox();
-        container.setSpacing(20);
-        container.setPadding(new Insets(20));
-        container.setAlignment(Pos.CENTER);
-        container.getStyleClass().add("root");
+        //primaryStage.setTitle("Configurazione Avvio di MindLab"); // Imposta il titolo della finestra
+        primaryStage.setTitle("MindLab");
+        // **Aggiunta dell'icona dell'applicazione**
+        // Percorso relativo all'icona dell'applicazione
+        String appIconPath = "/icone/logo_ML.png"; // L'icona deve essere nella cartella delle risorse del progetto
+        Image appIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream(appIconPath))); // Carica l'immagine dell'icona
+        primaryStage.getIcons().add(appIcon); // Aggiunge l'icona alla finestra principale (Stage)
 
-        // Titolo
-        Text title = new Text("Configurazione Avvio");
-        title.getStyleClass().add("title");
+        VBox container = new VBox(); // Crea un contenitore verticale per organizzare gli elementi
+        container.setSpacing(20); // Spaziatura tra gli elementi
+        container.setPadding(new Insets(20)); // Margini interni del contenitore
+        container.setAlignment(Pos.CENTER); // Allinea gli elementi al centro
+        container.getStyleClass().add("root"); // Aggiunge una classe di stile CSS al contenitore
 
-        // Opzione colore
-        ToggleGroup colorGroup = new ToggleGroup();
-        RadioButton colorMode = new RadioButton("Modalità a Colori");
-        colorMode.setToggleGroup(colorGroup);
-        colorMode.setSelected(true);
-        RadioButton bwMode = new RadioButton("Modalità Bianco e Nero");
-        bwMode.setToggleGroup(colorGroup);
-        HBox colorBox = new HBox(10, colorMode, bwMode);
-        colorBox.setAlignment(Pos.CENTER);
-        colorBox.getStyleClass().add("option-box");
+        // Carica e visualizza l'icona principale nella UI
+        String imagePath = "/icone/power-off.png"; // Percorso dell'immagine
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))); // Carica l'immagine
+        ImageView icona_power = new ImageView(icon); // Crea un visualizzatore per l'immagine
+        icona_power.setFitHeight(50); // Imposta l'altezza dell'immagine
+        icona_power.setFitWidth(50); // Imposta la larghezza dell'immagine
 
-        // Opzione salvataggio
-        CheckBox saveToDatabase = new CheckBox("Salva dati nel database");
-        saveToDatabase.getStyleClass().add("checkbox");
-        VBox saveBox = new VBox(saveToDatabase);
-        saveBox.setAlignment(Pos.CENTER_LEFT);
-        saveBox.getStyleClass().add("option-box");
+        // Crea il titolo
+        Text title = new Text("Configurazione Avvio di MindLab"); // Testo del titolo
+        title.getStyleClass().add("title"); // Aggiunge una classe di stile CSS al testo
 
-        // Pulsante di conferma
-        Button confirmButton = new Button("Conferma");
-        confirmButton.getStyleClass().add("button");
+        // Crea i pulsanti di scelta per la modalità colore
+        ToggleGroup colorGroup = new ToggleGroup(); // Gruppo di pulsanti di scelta
+        RadioButton colorMode = new RadioButton("Modalità a Colori"); // Opzione per la modalità a colori
+        colorMode.setToggleGroup(colorGroup); // Aggiunge il pulsante al gruppo
+        colorMode.setSelected(true); // Imposta l'opzione come predefinita
+        RadioButton bwMode = new RadioButton("Modalità Bianco e Nero"); // Opzione per la modalità bianco e nero
+        bwMode.setToggleGroup(colorGroup); // Aggiunge il pulsante al gruppo
+        HBox colorBox = new HBox(10, colorMode, bwMode); // Contenitore orizzontale per le opzioni
+        colorBox.setAlignment(Pos.CENTER); // Allinea le opzioni al centro
+        colorBox.getStyleClass().add("option-box"); // Aggiunge una classe di stile CSS
+
+        // Crea l'opzione di salvataggio
+        CheckBox saveToDatabase = new CheckBox("Salva dati nel database"); // Casella di controllo per il salvataggio
+        saveToDatabase.getStyleClass().add("checkbox"); // Aggiunge una classe di stile CSS
+        VBox saveBox = new VBox(saveToDatabase); // Contenitore verticale per la casella di controllo
+        saveBox.setAlignment(Pos.CENTER_LEFT); // Allinea l'opzione a sinistra
+        saveBox.getStyleClass().add("option-box"); // Aggiunge una classe di stile CSS
+
+        // Crea il pulsante di conferma
+        Button confirmButton = new Button("Conferma"); // Pulsante per confermare le scelte
+        confirmButton.getStyleClass().add("button"); // Aggiunge una classe di stile CSS
         confirmButton.setOnAction(event -> {
-            // Invia i dati al controller per l'elaborazione
-            controller.processSettings(colorMode.isSelected(), saveToDatabase.isSelected());
-            primaryStage.close();
+            // Azione da eseguire al clic del pulsante
+            controller.processSettings(colorMode.isSelected(), saveToDatabase.isSelected()); // Passa i dati al controller
+            primaryStage.close(); // Chiude la finestra principale
         });
 
-        // Aggiungi tutti i componenti al contenitore
-        container.getChildren().addAll(title, colorBox, saveBox, confirmButton);
+        // Aggiunge tutti gli elementi al contenitore principale
+        container.getChildren().addAll(icona_power, title, colorBox, saveBox, confirmButton);
 
-        // Creare e impostare la scena
-        Scene scene = new Scene(container, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight());
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/style_avvio.css")).toExternalForm());
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+        // Configura e mostra la scena
+        Scene scene = new Scene(container, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()); // Crea una scena a schermo intero
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/style_avvio.css")).toExternalForm()); // Aggiunge lo stile CSS
+        primaryStage.setScene(scene); // Imposta la scena sulla finestra principale
+        primaryStage.setFullScreen(true); // Imposta la finestra a schermo intero
+        primaryStage.show(); // Mostra la finestra
     }
 
     public static void main(String[] args) {
-        launch(args);
+        // Metodo main per avviare l'applicazione
+        launch(args); // Metodo JavaFX per avviare l'interfaccia
     }
 }
