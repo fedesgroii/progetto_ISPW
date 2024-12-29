@@ -1,0 +1,108 @@
+/* Corpo della pagina */
+.root {
+    -fx-background-color: #ffffff; /* Sfondo bianco */
+    -fx-font-family: 'Roboto', sans-serif; /* Font del testo */
+    -fx-alignment: center; /* Centrato */
+    -fx-padding: 0;
+    -fx-max-height: Infinity; /* Impostazione massima per l'altezza */
+}
+
+/* Titolo principale */
+#title {
+    -fx-font-size: 36px; /* Dimensione del titolo */
+    -fx-font-weight: bold; /* Grassetto per il titolo */
+    -fx-fill: #000000; /* Colore del testo del titolo (nero) */
+    -fx-padding: 20px; /* Spaziatura intorno al titolo */
+}
+
+/* Sottotitolo */
+#subtitle {
+    -fx-font-size: 1.2em; /* Dimensione sottotitolo */
+    -fx-text-fill: #333333; /* Colore testo (grigio scuro) */
+    -fx-margin-bottom: 30px; /* Spazio inferiore */
+}
+
+/* Pulsante Specialista */
+#specialistButton {
+    -fx-background-color: #000000; /* Colore di sfondo (nero) */
+    -fx-text-fill: white; /* Colore del testo (bianco) */
+    -fx-padding: 15px 30px; /* Spaziatura interna */
+    -fx-border-radius: 12px; /* Arrotonda i bordi */
+    -fx-background-radius: 12px; /* Arrotonda lo sfondo */
+    -fx-font-size: 18px; /* Dimensione del testo */
+    -fx-font-weight: bold; /* Grassetto */
+    -fx-cursor: hand; /* Cambia il cursore */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+}
+
+#specialistButton:hover {
+    -fx-background-color: #444444; /* Colore al passaggio del mouse (grigio scuro) */
+}
+
+/* Pulsante Paziente */
+#patientButton {
+    -fx-background-color: #555555; /* Colore di sfondo (grigio scuro) */
+    -fx-text-fill: white; /* Colore del testo (bianco) */
+    -fx-padding: 15px 30px; /* Spaziatura interna */
+    -fx-border-radius: 12px; /* Arrotonda i bordi */
+    -fx-background-radius: 12px; /* Arrotonda lo sfondo */
+    -fx-font-size: 18px; /* Dimensione del testo */
+    -fx-font-weight: bold; /* Grassetto */
+    -fx-cursor: hand; /* Cambia il cursore */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+}
+
+#patientButton:hover {
+    -fx-background-color: #333333; /* Colore al passaggio del mouse (grigio ancora più scuro) */
+}
+
+/* Link per prenotare senza registrazione */
+#appointmentLink {
+    -fx-text-fill: #000000; /* Colore del testo (nero) */
+    -fx-min-width: 400px; /* Larghezza minima */
+    -fx-font-size: 1em; /* Dimensione del font */
+    -fx-font-weight: normal; /* Font normale */
+    -fx-alignment: center; /* Centrato */
+    -fx-padding: 12px 20px; /* Padding */
+    -fx-background-color: transparent; /* Background trasparente */
+}
+
+/* Contenitore dei pulsanti */
+#vbox {
+    -fx-spacing: 30; /* Spaziatura tra gli elementi */
+    -fx-alignment: center; /* Allineamento al centro */
+    -fx-padding: 40; /* Padding */
+}
+
+/* Contenitore principale */
+#container {
+    -fx-background-color: white; /* Colore di sfondo bianco */
+    -fx-background-radius: 12px; /* Bordo arrotondato */
+    -fx-padding: 40px; /* Spaziatura interna */
+    -fx-max-width: 800px; /* Larghezza massima */
+    -fx-width: 90%; /* Larghezza al 90% */
+    -fx-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Ombra per creare profondità */
+    -fx-alignment: center; /* Centrato */
+    -fx-margin-bottom: 25px; /* Margine inferiore */
+}
+
+/* Pulsante per "Prenotarsi senza registrazione" (terzo bottone) */
+#appointmentLink {
+    -fx-background-color: #b0b0b0; /* Colore di sfondo grigio chiaro */
+    -fx-text-fill: white; /* Colore del testo (bianco) */
+    -fx-padding: 12px 25px; /* Spaziatura interna */
+    -fx-font-size: 14px; /* Testo più piccolo */
+    -fx-font-weight: bold; /* Grassetto */
+    -fx-border-radius: 12px; /* Arrotonda i bordi */
+    -fx-background-radius: 12px; /* Arrotonda lo sfondo */
+    -fx-cursor: hand; /* Cambia il cursore quando passa sopra */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+    -fx-alignment: center; /* Allineamento al centro */
+    -fx-pref-width: 400px; /* Imposta la larghezza preferita uguale agli altri due pulsanti */
+    -fx-max-width: 400px; /* Larghezza massima uguale agli altri */
+    -fx-margin-top: 20px; /* Distanza superiore per separarlo dagli altri */
+}
+
+#appointmentLink:hover {
+    -fx-background-color: #d3d3d3; /* Colore al passaggio del mouse (grigio ancora più chiaro) */
+}

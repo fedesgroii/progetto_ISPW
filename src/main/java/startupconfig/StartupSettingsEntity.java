@@ -1,3 +1,5 @@
+package startupconfig;
+
 import java.io.Serializable;
 
 public class StartupSettingsEntity implements Serializable {

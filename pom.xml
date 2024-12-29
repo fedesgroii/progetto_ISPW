@@ -47,7 +47,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version> <!-- Versione più recente -->
         <configuration>
-          <mainClass>StartupSettingsBoundary</mainClass> <!-- Inserisci il percorso completo della tua classe principale -->
+          <mainClass>startupconfig.StartupSettingsBoundary</mainClass> <!-- Inserisci il percorso completo della tua classe principale -->
         </configuration>
       </plugin>
     </plugins>
