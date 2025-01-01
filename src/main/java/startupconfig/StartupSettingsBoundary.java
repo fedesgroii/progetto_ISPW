@@ -21,20 +21,17 @@ import java.util.Objects; // Importa per confronti e manipolazioni di oggetti nu
 
 // Classe che rappresenta la boundary del pattern Singleton
 public class StartupSettingsBoundary extends Application {
-    private StartupSettingsController controller; // Riferimento al controller, che gestirà la logica applicativa
 
     @Override
     public void start(Stage primaryStage) {
         // Metodo principale chiamato da JavaFX per avviare l'interfaccia
 
-        controller = new StartupSettingsController(); // Crea un'istanza del controller per gestire le azioni dell'utente
+         StartupSettingsController controller = new StartupSettingsController(); // Crea un'istanza del controller per gestire le azioni dell'utente
 
-        //primaryStage.setTitle("Configurazione Avvio di MindLab"); // Imposta il titolo della finestra
         primaryStage.setTitle("MindLab");
         // **Aggiunta dell'icona dell'applicazione**
         // Percorso relativo all'icona dell'applicazione
-        String appIconPath = "/icone/logo_ML.png"; // L'icona deve essere nella cartella delle risorse del progetto
-        Image appIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream(appIconPath))); // Carica l'immagine dell'icona
+        Image appIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icone/logo_ML.png"))); // Carica l'immagine dell'icona
         primaryStage.getIcons().add(appIcon); // Aggiunge l'icona alla finestra principale (Stage)
 
         VBox container = new VBox(); // Crea un contenitore verticale per organizzare gli elementi
@@ -44,11 +41,10 @@ public class StartupSettingsBoundary extends Application {
         container.getStyleClass().add("root"); // Aggiunge una classe di stile CSS al contenitore
 
         // Carica e visualizza l'icona principale nella UI
-        String imagePath = "/icone/power-off.png"; // Percorso dell'immagine
-        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))); // Carica l'immagine
-        ImageView icona_power = new ImageView(icon); // Crea un visualizzatore per l'immagine
-        icona_power.setFitHeight(50); // Imposta l'altezza dell'immagine
-        icona_power.setFitWidth(50); // Imposta la larghezza dell'immagine
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icone/power-off.png"))); // Carica l'immagine
+        ImageView IconaPower = new ImageView(icon); // Crea un visualizzatore per l'immagine
+        IconaPower.setFitHeight(50); // Imposta l'altezza dell'immagine
+        IconaPower.setFitWidth(50); // Imposta la larghezza dell'immagine
 
         // Crea il titolo
         Text title = new Text("Configurazione Avvio di MindLab"); // Testo del titolo
@@ -89,7 +85,7 @@ public class StartupSettingsBoundary extends Application {
 });
 
         // Aggiunge tutti gli elementi al contenitore principale
-        container.getChildren().addAll(icona_power, title, colorBox, saveBox, confirmButton);
+        container.getChildren().addAll(IconaPower, title, colorBox, saveBox, confirmButton);
 
         // Configura e mostra la scena
         Scene scene = new Scene(container, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()); // Crea una scena a schermo intero

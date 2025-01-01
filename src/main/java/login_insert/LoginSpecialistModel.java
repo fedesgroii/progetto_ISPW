@@ -30,7 +30,12 @@ public class LoginSpecialistModel {
 
     // Metodo per verificare le credenziali (simulazione con dati predefiniti)
 
-    /*public boolean validateCredentials() {
+    /*
+    *
+    *  RICORDATI DI VERIFICARE SE TENERLO QUI OPPURE METTERLO DENTRO IL CONTROLLER APP
+    *
+    *
+    public boolean validateCredentials() {
         // Logica per la validazione delle credenziali
         return "test@example.com".equals(email) && "password123".equals(password);
     }*/

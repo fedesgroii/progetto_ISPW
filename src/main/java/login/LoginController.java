@@ -6,18 +6,16 @@ class LoginController {
 
     public void handleSpecialistLogin() {
         entity.setRole("Specialist");
-      //  System.out.println("Login as Specialist");
-        // Implement login logic here
+ // to implement
     }
 
     public void handlePatientLogin() {
         entity.setRole("Patient");
-        //System.out.println("Login as Patient");
-        // Implement login logic here
+    // to implement
     }
 
     public void handleAppointmentWithoutLogin() {
-        //System.out.println("Booking without login");
-        // Implement logic here
+// to implement
+
     }
 }

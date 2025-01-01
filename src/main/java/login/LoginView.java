@@ -59,8 +59,6 @@ public class LoginView {
         // Aggiungi eventi personalizzati
         specialistButton.setOnAction(event -> {
             controller.handleSpecialistLogin();
-            //showAlert("Accesso Specialista", "Hai scelto di accedere come specialista.");
-
             // Avvia la finestra di login per lo specialista
             LoginSpecialistView loginviewspec = new LoginSpecialistView();
             Stage loginStage = new Stage();
@@ -73,7 +71,6 @@ public class LoginView {
 
         patientButton.setOnAction(event -> {
             controller.handlePatientLogin();
-            //showAlert("Accesso Paziente", "Hai scelto di accedere come paziente.");
         });
 
 
@@ -81,7 +78,6 @@ public class LoginView {
 
         appointmentButton.setOnAction(event -> {
             controller.handleAppointmentWithoutLogin();
-            //showAlert("Prenotazione Appuntamento", "Stai prenotando un appuntamento senza registrarti.");
         });
 
 
@@ -100,19 +96,4 @@ public class LoginView {
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
     }
-
-
- /*   private void showAlert(String title, String message) {
-
-       //  * @param title   il titolo dell'alert.
-       //  * @param message il messaggio dell'alert.
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }*/
-
-
 }

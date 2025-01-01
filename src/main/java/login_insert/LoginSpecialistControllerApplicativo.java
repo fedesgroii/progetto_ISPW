@@ -1,18 +1,17 @@
 package login_insert;
 
-import login_insert.LoginSpecialistModel;
 
 public class LoginSpecialistControllerApplicativo {
-    private final LoginSpecialistControllerGrafico CG;
+    private final LoginSpecialistControllerGrafico cg;
 
     public LoginSpecialistControllerApplicativo(LoginSpecialistControllerGrafico CG) {
-        this.CG = CG;
+        this.cg = CG;
     }
 
     // Metodo per validare le credenziali
     public boolean validateCredentials(String email, String password) {
 
-        CG.showError();
+        cg.showError();
           return false;
     }
 }

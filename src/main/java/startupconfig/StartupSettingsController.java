@@ -18,13 +18,6 @@ public class StartupSettingsController {
     public void processSettings(boolean colorMode, boolean saveToDatabase) {
         config.setColorMode(colorMode);
         config.setSaveToDatabase(saveToDatabase);
-
-        /*
-        // Eventuali altre logiche legate alle impostazioni possono essere aggiunte qui.
-        System.out.println("Configurazione aggiornata:");
-        System.out.println("Modalità a Colori: " + (colorMode ? "Attiva" : "Disattiva"));
-        System.out.println("Salvataggio nel Database: " + (saveToDatabase ? "Abilitato" : "Disabilitato"));
-    */
     }
 
 }

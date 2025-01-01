@@ -12,7 +12,7 @@ import startupconfig.StartupSettingsEntity;
 
 public class LoginSpecialistView {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
-    private LoginSpecialistControllerApplicativo CA;
+    private LoginSpecialistControllerApplicativo ca;
 
     // Dichiarazione di errorText come variabile di istanza
     private Text errorText;
@@ -22,7 +22,7 @@ public class LoginSpecialistView {
         LoginSpecialistControllerGrafico CG = new LoginSpecialistControllerGrafico(this);
 
         // Inizializza il controller applicativo con il controller grafico
-        CA = new LoginSpecialistControllerApplicativo(CG);
+        ca = new LoginSpecialistControllerApplicativo(CG);
         // Titolo della pagina
         Text title = new Text("Login Specialista");
         title.setId("title");
@@ -80,7 +80,7 @@ public class LoginSpecialistView {
             String email = emailField.getText();
             String password = passwordField.getText();
 
-            boolean isValid = CA.validateCredentials(email, password);
+            boolean isValid = ca.validateCredentials(email, password);
 
         });
 
@@ -99,7 +99,4 @@ public class LoginSpecialistView {
         errorText.setVisible(true); // Ora `errorText` è accessibile
     }
 
-    public void HideError() {
-        errorText.setVisible(false); // Ora `errorText` è nascosto
-    }
 }
