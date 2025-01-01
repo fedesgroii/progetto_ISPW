@@ -12,7 +12,6 @@ import startupconfig.StartupSettingsEntity;
 
 public class LoginSpecialistView {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
-    private LoginSpecialistControllerApplicativo controllerApplicativo;
 
     // Dichiarazione di errorText come variabile di istanza
     private Text errorText;
@@ -22,7 +21,7 @@ public class LoginSpecialistView {
         LoginSpecialistControllerGrafico CG = new LoginSpecialistControllerGrafico(this);
 
         // Inizializza il controller applicativo con il controller grafico
-        controllerApplicativo = new LoginSpecialistControllerApplicativo(CG);
+        LoginSpecialistControllerApplicativo controllerApplicativo = new LoginSpecialistControllerApplicativo(CG);
         // Titolo della pagina
         Text title = new Text("Login Specialista");
         title.setId("title");
