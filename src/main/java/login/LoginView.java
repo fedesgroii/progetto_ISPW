@@ -1,24 +1,20 @@
 package login;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import login_insert.LoginSpecialistView;
 import startupconfig.StartupSettingsEntity;
 
-// Boundary Class
-public class LoginView extends Application {
+public class LoginView {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
 
-    @Override
-    public void start(Stage primaryStage) {
-        System.out.println("Inizio dell'applicazione");
 
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Portale MindLab");
 
         // Titolo
@@ -32,53 +28,91 @@ public class LoginView extends Application {
         // Pulsante Specialista
         Button specialistButton = new Button("Specialista");
         specialistButton.setId("specialistButton");
-        specialistButton.setPrefWidth(400); // Larghezza aumentata
+        specialistButton.setPrefWidth(400);
 
         // Pulsante Paziente
         Button patientButton = new Button("Paziente");
         patientButton.setId("patientButton");
-        patientButton.setPrefWidth(400); // Larghezza aumentata
+        patientButton.setPrefWidth(400);
 
-        // Link Prenota un appuntamento senza registrarti
-        Hyperlink appointmentLink = new Hyperlink("Prenota un appuntamento senza registrarti");
-        appointmentLink.setId("appointmentLink");
-        appointmentLink.setMinWidth(400); // Larghezza minima per il link
+        // Pulsante Prenota un appuntamento senza registrarti
+        Button appointmentButton = new Button("Prenota un appuntamento senza registrarti");
+        appointmentButton.setId("appointmentButton");
+        appointmentButton.setPrefWidth(400);
 
         // Layout
-        VBox vbox = new VBox(30, title, subtitle, specialistButton, patientButton, appointmentLink); // Spaziatura aumentata
+        VBox vbox = new VBox(30, title, subtitle, specialistButton, patientButton, appointmentButton);
         vbox.setId("vbox");
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(40)); // Padding aumentato
+        vbox.setPadding(new Insets(40));
 
-        // Imposta la scena con dimensioni iniziali più grandi
-        Scene scene = new Scene(vbox); // Dimensioni iniziali
-        primaryStage.setResizable(false); // Consente il ridimensionamento
-        primaryStage.setMaximized(true); // Avvia a schermo intero
+        // Scena
+        Scene scene = new Scene(vbox);
+        primaryStage.setResizable(false);
+        primaryStage.setMaximized(true);
 
         // Controller setup
         LoginController controller = new LoginController();
-        specialistButton.setOnAction(event -> controller.handleSpecialistLogin());
-        patientButton.setOnAction(event -> controller.handlePatientLogin());
-        appointmentLink.setOnAction(event -> controller.handleAppointmentWithoutLogin());
 
-        // Carica il file CSS in base alla configurazione
-        System.out.println("Caricamento CSS in corso...");
+
+
+        // Aggiungi eventi personalizzati
+        specialistButton.setOnAction(event -> {
+            controller.handleSpecialistLogin();
+            //showAlert("Accesso Specialista", "Hai scelto di accedere come specialista.");
+
+            // Avvia la finestra di login per lo specialista
+            LoginSpecialistView loginviewspec = new LoginSpecialistView();
+            Stage loginStage = new Stage();
+            loginviewspec.start(loginStage); // Avvia correttamente il metodo start chiamando la pagina di login
+
+            primaryStage.close(); // Ora chiudi la finestra principale solo dopo aver avviato la finestra di login
+        });
+
+
+
+        patientButton.setOnAction(event -> {
+            controller.handlePatientLogin();
+            //showAlert("Accesso Paziente", "Hai scelto di accedere come paziente.");
+        });
+
+
+
+
+        appointmentButton.setOnAction(event -> {
+            controller.handleAppointmentWithoutLogin();
+            //showAlert("Prenotazione Appuntamento", "Stai prenotando un appuntamento senza registrarti.");
+        });
+
+
+
+        // Carica il file CSS
         if (config.isColorMode()) {
             String colorStyle = getClass().getResource("/style/style_login_a_colori.css").toExternalForm();
-            System.out.println("Caricamento CSS a colori: " + colorStyle);
             scene.getStylesheets().add(colorStyle);
         } else {
             String bnStyle = getClass().getResource("/style/style_login_bn.css").toExternalForm();
-            System.out.println("Caricamento CSS bianco e nero: " + bnStyle);
             scene.getStylesheets().add(bnStyle);
         }
 
         primaryStage.setScene(scene);
         primaryStage.show();
-        System.out.println("Fine dell'applicazione");
+        primaryStage.setFullScreen(true);
+        primaryStage.setResizable(false);
     }
 
-    public static void main(String[] args) {
-        launch(args); // Avvia l'applicazione
-    }
+
+ /*   private void showAlert(String title, String message) {
+
+       //  * @param title   il titolo dell'alert.
+       //  * @param message il messaggio dell'alert.
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }*/
+
+
 }

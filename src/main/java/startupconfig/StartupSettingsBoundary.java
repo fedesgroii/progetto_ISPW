@@ -83,7 +83,7 @@ public class StartupSettingsBoundary extends Application {
         // Avvia la finestra di login
         LoginView loginView = new LoginView();
         Stage loginStage = new Stage();
-        loginView.start(loginStage); // Avvia correttamente il metodo start
+        loginView.start(loginStage); // Avvia correttamente il metodo start chiamando la pagina di login
         primaryStage.close(); // Ora chiudi la finestra principale solo dopo aver avviato la finestra di login
 
 });

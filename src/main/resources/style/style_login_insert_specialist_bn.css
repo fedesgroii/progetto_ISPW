@@ -4,7 +4,7 @@
     -fx-font-family: 'Roboto', sans-serif; /* Font del testo */
     -fx-alignment: center; /* Centrato */
     -fx-padding: 0;
-    -fx-max-height: Infinity; /* Altezza massima */
+    -fx-max-height: 100%; /* Altezza massima */
 }
 
 /* Titolo principale */
@@ -30,7 +30,21 @@
     -fx-font-size: 18px; /* Dimensione del testo */
     -fx-font-weight: bold; /* Grassetto */
     -fx-cursor: hand; /* Cambia il cursore */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+}
+
+/* Campo di input */
+#inputField {
+    -fx-padding: 10px; /* Spaziatura interna */
+    -fx-font-size: 16px; /* Dimensione del testo */
+    -fx-border-color: #bdc3c7; /* Colore del bordo */
+    -fx-border-radius: 6px; /* Arrotondamento del bordo */
+    -fx-background-radius: 6px; /* Arrotondamento dello sfondo */
+    -fx-background-color: #ecf0f1; /* Sfondo chiaro */
+    -fx-border-width: 1px; /* Larghezza del bordo */
+    -fx-pref-width: 150px; /* Larghezza preferita */
+    -fx-min-width: 100px;  /* Larghezza minima */
+    -fx-max-width: 250px;  /* Larghezza massima */
 }
 
 /* Pulsante Specialista */
@@ -68,11 +82,6 @@
     -fx-border-radius: 12px; /* Arrotonda i bordi */
     -fx-background-radius: 12px; /* Arrotonda lo sfondo */
     -fx-pref-width: 400px; /* Imposta la larghezza preferita */
-    -fx-max-width: 400px; /* Larghezza massima */
-}
-#appointmentLink:hover {
-    -fx-background-color: black; /* Sfondo nero al passaggio del mouse */
-    -fx-text-fill: white; /* Testo bianco */
 }
 
 /* Contenitore dei pulsanti */
@@ -89,7 +98,13 @@
     -fx-padding: 40px; /* Spaziatura interna */
     -fx-max-width: 800px; /* Larghezza massima */
     -fx-width: 90%; /* Larghezza al 90% */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 4); /* Ombra per profondità */
-    -fx-alignment: center; /* Centrato */
-    -fx-margin-bottom: 25px; /* Margine inferiore */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0, 0, 4); /* Ombra per profondità */
+}
+
+/* Campo di errore */
+#errorText {
+    -fx-font-size: 14px;
+    -fx-text-fill: #0c0a0a; /* Colore nero per l'errore */
+    -fx-padding: 10px;
+    -fx-font-weight: bold;
 }
