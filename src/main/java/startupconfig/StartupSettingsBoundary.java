@@ -42,9 +42,9 @@ public class StartupSettingsBoundary extends Application {
 
         // Carica e visualizza l'icona principale nella UI
         Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/icone/power-off.png"))); // Carica l'immagine
-        ImageView IconaPower = new ImageView(icon); // Crea un visualizzatore per l'immagine
-        IconaPower.setFitHeight(50); // Imposta l'altezza dell'immagine
-        IconaPower.setFitWidth(50); // Imposta la larghezza dell'immagine
+        ImageView iconaPower = new ImageView(icon); // Crea un visualizzatore per l'immagine
+        iconaPower.setFitHeight(50); // Imposta l'altezza dell'immagine
+        iconaPower.setFitWidth(50); // Imposta la larghezza dell'immagine
 
         // Crea il titolo
         Text title = new Text("Configurazione Avvio di MindLab"); // Testo del titolo
@@ -85,7 +85,7 @@ public class StartupSettingsBoundary extends Application {
 });
 
         // Aggiunge tutti gli elementi al contenitore principale
-        container.getChildren().addAll(IconaPower, title, colorBox, saveBox, confirmButton);
+        container.getChildren().addAll(iconaPower, title, colorBox, saveBox, confirmButton);
 
         // Configura e mostra la scena
         Scene scene = new Scene(container, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()); // Crea una scena a schermo intero
