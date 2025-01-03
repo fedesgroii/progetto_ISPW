@@ -74,4 +74,12 @@ public abstract class LoginViewBase {
     public void showError() {
         errorText.setVisible(true);
     }
+
+    public PasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
 }

@@ -16,6 +16,23 @@ public abstract class Persona {
         this.email = email;
     }
 
+    public String getNome() { return nome; }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public String getDataDiNascita() {
+        return dataDiNascita;
+    }
+
+    public String getNumeroTelefonico() {
+        return numeroTelefonico;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }
 
 
