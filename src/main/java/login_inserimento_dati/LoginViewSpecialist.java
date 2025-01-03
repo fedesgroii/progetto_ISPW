@@ -1,5 +1,5 @@
 // Login View for Specialist
-package login_insert2;
+package login_inserimento_dati;
 
 public class LoginViewSpecialist extends LoginViewBase {
     @Override

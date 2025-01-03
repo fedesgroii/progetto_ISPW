@@ -7,8 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import login_insert2.LoginViewPatient;
-import login_insert2.LoginViewSpecialist;
+import login_inserimento_dati.LoginViewPatient;
+import login_inserimento_dati.LoginViewSpecialist;
 import startupconfig.StartupSettingsEntity;
 
 public class LoginView {

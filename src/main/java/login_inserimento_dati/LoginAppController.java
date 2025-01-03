@@ -1,16 +1,12 @@
-package login_insert2;
-
-import javafx.stage.Stage;
+package login_inserimento_dati;
 import startupconfig.StartupSettingsEntity;
 
 public class LoginAppController {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
-    private final LoginViewBase view;
-    private final LoginGraphicController Cgr;
+    private final LoginGraphicController controlloreGrafico;
 
     public LoginAppController(LoginViewBase view) {
-        this.view = view;
-        this.Cgr = new LoginGraphicController(view);
+        this.controlloreGrafico = new LoginGraphicController(view);
     }
 
     public boolean checkCredentials(String userType, String username, String password) {
@@ -22,12 +18,12 @@ public class LoginAppController {
     }
 
     private boolean checkDatabaseCredentials(String userType, String username, String password) {
-        Cgr.showError();
+        controlloreGrafico.showError();
         return false; // Dummy
     }
 
     private boolean checkListPointCredentials(String userType, String username, String password) {
-        Cgr.showError();
+        controlloreGrafico.showError();
         return false; // Dummy
     }
 }

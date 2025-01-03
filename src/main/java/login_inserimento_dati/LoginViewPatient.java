@@ -1,5 +1,5 @@
 // Login View for Patient
-package login_insert2;
+package login_inserimento_dati;
 
 public class LoginViewPatient extends LoginViewBase {
     @Override

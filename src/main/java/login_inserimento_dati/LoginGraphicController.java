@@ -1,7 +1,5 @@
 // Graphic Controller
-package login_insert2;
-
-import javafx.stage.Stage;
+package login_inserimento_dati;
 
 public class LoginGraphicController {
     private final LoginViewBase view;
@@ -13,6 +11,5 @@ public class LoginGraphicController {
     protected void showError() {
         view.showError();
     }
-
     }
 
