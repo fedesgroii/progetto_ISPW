@@ -1,4 +1,4 @@
-package login_insert;
+package login_insert_DUMMY;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,6 +22,7 @@ public class LoginSpecialistView {
 
         // Inizializza il controller applicativo con il controller grafico
         LoginSpecialistControllerApplicativo controllerApplicativo = new LoginSpecialistControllerApplicativo(CG);
+
         // Titolo della pagina
         Text title = new Text("Login Specialista");
         title.setId("title");

@@ -7,7 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import login_insert.LoginSpecialistView;
+import login_insert2.LoginViewPatient;
+import login_insert2.LoginViewSpecialist;
 import startupconfig.StartupSettingsEntity;
 
 public class LoginView {
@@ -60,10 +61,8 @@ public class LoginView {
         specialistButton.setOnAction(event -> {
             controller.handleSpecialistLogin();
             // Avvia la finestra di login per lo specialista
-            LoginSpecialistView loginviewspec = new LoginSpecialistView();
-            Stage loginStage = new Stage();
-            loginviewspec.start(loginStage); // Avvia correttamente il metodo start chiamando la pagina di login
-
+            LoginViewSpecialist specialistView = new LoginViewSpecialist();
+            specialistView.start(new Stage());
             primaryStage.close(); // Ora chiudi la finestra principale solo dopo aver avviato la finestra di login
         });
 
@@ -71,6 +70,10 @@ public class LoginView {
 
         patientButton.setOnAction(event -> {
             controller.handlePatientLogin();
+            // Avvia la finestra di login per lo specialista
+            LoginViewPatient patientView = new LoginViewPatient();
+            patientView.start(new Stage());
+            primaryStage.close(); // Ora chiudi la finestra principale solo dopo aver avviato la finestra di login
         });
 
 
@@ -92,8 +95,8 @@ public class LoginView {
         }
 
         primaryStage.setScene(scene);
-        primaryStage.show();
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
+        primaryStage.show();
     }
 }
