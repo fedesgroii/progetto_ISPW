@@ -2,10 +2,9 @@ package utenti;
 
 public class Specialista extends Persona {
     private String specializzazione;
-    private String tipo = "Specialista";
 
     // Costruttore
-    public Specialista(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email, String specializzazione, String numeroLicenza) {
+    public Specialista(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email, String specializzazione) {
         super(nome, cognome, dataDiNascita, numeroTelefonico, email);
         this.specializzazione = specializzazione;
     }

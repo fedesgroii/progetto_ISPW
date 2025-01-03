@@ -3,7 +3,6 @@ package utenti;
 public class Paziente extends Persona {
     private String numeroTesseraSanitaria;
     private String condizioniMediche;
-    private String tipo = "Paziente";
     // Costruttore
     public Paziente(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email, String numeroTesseraSanitaria, String condizioniMediche) {
         super(nome, cognome, dataDiNascita, numeroTelefonico, email);
