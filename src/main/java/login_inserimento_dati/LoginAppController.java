@@ -18,12 +18,24 @@ public class LoginAppController {
     }
 
     private boolean checkDatabaseCredentials(String userType, String username, String password) {
+        int a = 0;
         controlloreGrafico.showError();
-        return false; // Dummy
+        if (a == 0) {
+            return false; // Dummy
+        }else{
+            return true;
+        }
+
     }
 
     private boolean checkListPointCredentials(String userType, String username, String password) {
         controlloreGrafico.showError();
-        return false; // Dummy
+        int a = 0;
+        controlloreGrafico.showError();
+        if (a == 0) {
+            return false; // Dummy
+        }else{
+            return true;
+        }
     }
 }
