@@ -13,7 +13,7 @@ public abstract class LoginViewBase {
     private Text errorText;
     private TextField emailField;
     private PasswordField passwordField;
-    private final LoginAppController Capp = new LoginAppController(this);
+    private final LoginAppController controllerApplicativo = new LoginAppController(this);
 
     protected abstract String getTipo();
     protected abstract String getTitleText();
@@ -42,8 +42,8 @@ public abstract class LoginViewBase {
         Button loginButton = new Button("Accedi");
         loginButton.setId("specialistButton");
         loginButton.setOnAction(event -> {
-            if (Capp != null) {
-                Capp.checkCredentials(getTipo(), emailField.getText(), passwordField.getText());
+            if (controllerApplicativo != null) {
+                controllerApplicativo.checkCredentials(getTipo(), emailField.getText(), passwordField.getText());
             }
         });
 

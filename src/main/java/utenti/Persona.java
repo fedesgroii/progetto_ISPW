@@ -8,7 +8,7 @@ public abstract class Persona {
     private String email;
 
     // Costruttore
-    public Persona(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email) {
+    protected Persona(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email) {
         this.nome = nome;
         this.cognome = cognome;
         this.dataDiNascita = dataDiNascita;
