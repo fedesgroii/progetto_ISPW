@@ -1,18 +1,16 @@
 package registrazione;
 
-import utenti.Paziente;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class registrazionePazienteControllerApplicativo {
-    private final registrazionePazienteView view;
+public class RegistrazionePazienteControllerApplicativo {
+    private final RegistrazionePazienteView view;
 
-    public registrazionePazienteControllerApplicativo(registrazionePazienteView registrazionePazienteView) {
+    public RegistrazionePazienteControllerApplicativo(RegistrazionePazienteView registrazionePazienteView) {
         this.view = registrazionePazienteView;
     }
 
-    private boolean isValidInput(Paziente paziente) {
+    public boolean isValidInput() {
         // Verifica che il nome non sia vuoto
         if(view.nomeField.getText() == null || view.nomeField.getText().isEmpty()) {
             view.showErrorNome();
@@ -48,7 +46,7 @@ public class registrazionePazienteControllerApplicativo {
 
         // Verifica che il numero telefonico sia valido (formato italiano)
         String numeroTelefonico = view.numeroTelefonicoField.getText();
-        String regexTelefono = "/^((3[0-9][0-9])\\d{7})$/"; // Regex per numeri telefonici italiani
+        String regexTelefono = "^(3[1-9]\\d{2}\\d{6})$"; // Regex per numeri telefonici italiani
 
         if (numeroTelefonico == null || numeroTelefonico.isEmpty() || !numeroTelefonico.matches(regexTelefono)) {
             view.showErrorNumeroTelefonico();  // Mostra errore se il numero non è valido

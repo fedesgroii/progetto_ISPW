@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import login_inserimento_dati.LoginViewPatient;
 import login_inserimento_dati.LoginViewSpecialist;
-import registrazione.registrazionePazienteView;
+import registrazione.RegistrazionePazienteView;
 import startupconfig.StartupSettingsEntity;
 
 public class LoginView {
@@ -97,7 +97,7 @@ public class LoginView {
         });
 
         registerButton.setOnAction(event -> {
-        registrazionePazienteView regView = new registrazionePazienteView();
+        RegistrazionePazienteView regView = new RegistrazionePazienteView();
             regView.start(new Stage());
             primaryStage.close();
         });
