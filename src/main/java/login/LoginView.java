@@ -16,6 +16,7 @@ import startupconfig.StartupSettingsEntity;
 
 public class LoginView {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
+    private static final String SUBTITLE = "subtitle";
 
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Portale MindLab");
@@ -26,7 +27,7 @@ public class LoginView {
 
         // Sottotitolo
         Text subtitle = new Text("Accedi come:");
-        subtitle.setId("subtitle");
+        subtitle.setId(SUBTITLE);
 
         // Pulsante Specialista
         Button specialistButton = new Button("Specialista");
@@ -40,7 +41,7 @@ public class LoginView {
 
         // Sottotitolo
         Text subtitle2 = new Text("oppure");
-        subtitle2.setId("subtitle");
+        subtitle2.setId(SUBTITLE);
 
         // Pulsante Registrati
         Button registerButton = new Button("Registrati");
@@ -49,7 +50,7 @@ public class LoginView {
 
         // Sottotitolo
         Text subtitle3 = new Text("altrimenti");
-        subtitle3.setId("subtitle");
+        subtitle3.setId(SUBTITLE);
 
         // Pulsante Prenota un appuntamento senza registrarti
         Button appointmentButton = new Button("Prenota un appuntamento senza registrarti");
