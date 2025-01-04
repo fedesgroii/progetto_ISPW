@@ -1,92 +1,87 @@
 /* Corpo della pagina */
 .root {
-    -fx-background-color: linear-gradient(to bottom, #e0eafc, #cfdef3); /* Sfondo sfumato */
-    -fx-font-family: 'Roboto', sans-serif; /* Font del testo */
-    -fx-alignment: center; /* Centrato */
+    -fx-background-color: linear-gradient(to bottom, #f7f9fc, #e3f2fd); /* Gradiente tenue */
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
     -fx-padding: 0;
-    -fx-max-height: Infinity; /* Altezza massima */
+    -fx-max-height: Infinity;
 }
 
 /* Titolo principale */
 #title {
-    -fx-font-size: 36px; /* Dimensione del titolo */
-    -fx-font-weight: bold; /* Grassetto per il titolo */
-    -fx-text-fill: #2c3e50; /* Colore del testo nero */
-    -fx-padding: 20px; /* Spaziatura intorno al titolo */
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e; /* Blu-grigio scuro */
+    -fx-padding: 20px;
 }
 
 /* Sottotitolo */
 #subtitle {
-    -fx-font-size: 18px; /* Dimensione del sottotitolo */
-    -fx-text-fill: #34495e; /* Colore testo nero */
-    -fx-padding: 0 0 20px 0; /* Padding inferiore */
+    -fx-font-size: 18px;
+    -fx-text-fill: #566573; /* Grigio-blu tenue */
+    -fx-padding: 0 0 20px 0;
 }
 
 /* Pulsanti Generali */
 .button {
-    -fx-padding: 15px 30px; /* Spaziatura interna */
-    -fx-border-radius: 12px; /* Arrotonda i bordi */
-    -fx-background-radius: 12px; /* Arrotonda lo sfondo */
-    -fx-font-size: 18px; /* Dimensione del testo */
-    -fx-font-weight: bold; /* Grassetto */
-    -fx-cursor: hand; /* Cambia il cursore */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5); /* Aggiunge un'ombra */
+    -fx-padding: 15px 30px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5); /* Ombra leggera */
 }
 
 /* Pulsante Specialista */
-#specialistButton {
-    -fx-background-color: #28a745; /* Sfondo bianco */
-    -fx-border-color: white; /* Bordo nero */
+#login {
+    -fx-background-color: #4caf50; /* Verde tenue */
+    -fx-border-color: #ffffff;
     -fx-border-width: 2px;
-    -fx-text-fill: white; /* Colore del testo nero */
+    -fx-text-fill: white;
 }
-#specialistButton:hover {
-    -fx-background-color: #218838; /* Verde più scuro al passaggio del mouse */
+#login:hover {
+    -fx-background-color: #388e3c; /* Verde scuro tenue */
 }
 
 /* Pulsante Paziente */
-#patientButton {
-    -fx-background-color: #28a745; /* Sfondo bianco */
-    -fx-border-color: white; /* Bordo nero */
+#registrazione {
+    -fx-background-color: #42a5f5; /* Azzurro tenue */
+    -fx-border-color: #ffffff;
     -fx-border-width: 2px;
-    -fx-text-fill: white; /* Colore del testo nero */
+    -fx-text-fill: white;
 }
-#specialistButton:hover {
-    -fx-background-color: #218838; /* Verde più scuro al passaggio del mouse */
+#registrazione:hover {
+    -fx-background-color: #1976d2; /* Blu più scuro */
 }
 
 /* Pulsante Prenotazione Senza Registrazione */
 #appointmentLink {
-    -fx-background-color: #ffc107; /* Sfondo bianco */
-    -fx-border-color: #212529; /* Bordo nero */
+    -fx-background-color: #ffd54f; /* Giallo tenue */
+    -fx-border-color: #ffffff;
     -fx-border-width: 2px;
-    -fx-text-fill: black; /* Colore del testo nero */
-    -fx-padding: 12px 25px; /* Spaziatura interna */
-    -fx-font-size: 14px; /* Testo più piccolo */
-    -fx-border-radius: 12px; /* Arrotonda i bordi */
-    -fx-background-radius: 12px; /* Arrotonda lo sfondo */
-    -fx-pref-width: 400px; /* Imposta la larghezza preferita */
-    -fx-max-width: 400px; /* Larghezza massima */
+    -fx-text-fill: #212121; /* Testo grigio scuro */
+    -fx-padding: 12px 25px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 400px;
 }
 #appointmentLink:hover {
-    -fx-background-color: #e0a800; /* Giallo più scuro al passaggio del mouse */
-}
-
-/* Contenitore dei pulsanti */
-#vbox {
-    -fx-spacing: 30; /* Spaziatura tra gli elementi */
-    -fx-alignment: center; /* Allineamento al centro */
-    -fx-padding: 40; /* Padding */
+    -fx-background-color: #fbc02d; /* Giallo più scuro */
 }
 
 /* Contenitore principale */
 #container {
-    -fx-background-color: white; /* Sfondo bianco */
-    -fx-background-radius: 12px; /* Bordo arrotondato */
-    -fx-padding: 40px; /* Spaziatura interna */
-    -fx-max-width: 800px; /* Larghezza massima */
-    -fx-width: 90%; /* Larghezza al 90% */
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 4); /* Ombra per profondità */
-    -fx-alignment: center; /* Centrato */
-    -fx-margin-bottom: 25px; /* Margine inferiore */
+    -fx-background-color: #ffffff; /* Bianco neutro */
+    -fx-background-radius: 12px;
+    -fx-padding: 30px;
+    -fx-max-width: 600px;
+    -fx-max-height: 600px;
+    -fx-width: 70%;
+    -fx-height: 70%;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 15, 0, 0, 4); /* Ombra tenue */
+    -fx-alignment: center;
+    -fx-margin-bottom: 20px;
 }
