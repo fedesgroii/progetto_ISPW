@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * Si appoggia a DatabaseConnection per ottenere la connessione.
  */
 public class DatabaseOperations {
-    private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
+    private static final Logger logger = Logger.getLogger(DatabaseOperations.class.getName());
    //costruttore privato per nascondere il costruttore pubblico implicito
     private DatabaseOperations(){
         logger.info("DatabaseConnection constructor called.");
