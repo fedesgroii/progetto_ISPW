@@ -3,7 +3,7 @@ package utenti;
 import java.time.LocalDate;
 
 // Classe di supporto per ridurre il numero di parametri nel costruttore
-class PazienteInfo {
+public class PazienteInfo {
     private String nome;
     private String cognome;
     private LocalDate dataDiNascita;

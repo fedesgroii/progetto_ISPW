@@ -4,6 +4,7 @@ import storage_db.DatabaseStorageStrategyPaziente;  // Importa la strategia di s
 import storage_liste.ListaPazienti;
 import startupconfig.StartupSettingsEntity;  // Importa la classe per gestire le configurazioni iniziali
 import utenti.Paziente;  // Importa la classe Paziente
+import utenti.PazienteInfo;  // Importa la classe PazienteInfo
 import java.time.LocalDate;  // Importa la classe LocalDate per la gestione delle date
 import java.time.format.DateTimeParseException;  // Importa la classe per gestire eccezioni nel parsing delle date
 
@@ -121,7 +122,7 @@ public class RegistrazionePazienteControllerApplicativo {
     }
 
     private Paziente createPaziente() {
-        return new Paziente(
+        PazienteInfo pazienteInfo = new PazienteInfo(
                 view.nomeField.getText(),
                 view.cognomeField.getText(),
                 LocalDate.parse(view.dataDiNascitaField.getText(), java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")),
@@ -131,8 +132,6 @@ public class RegistrazionePazienteControllerApplicativo {
                 view.codiceFiscaleField.getText(),
                 "DA SPECIFICARE"
         );
+        return new Paziente(pazienteInfo);
     }
-
-
-
 }

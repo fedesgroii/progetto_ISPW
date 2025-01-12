@@ -1,5 +1,6 @@
 package storage_db;
 import utenti.Paziente;
+import utenti.PazienteInfo;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +39,6 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
         }
     }
 
-
     @Override
     public Paziente trova(Paziente paziente) {
         try (Connection conn = getConnection();
@@ -48,7 +48,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     LocalDate dataDiNascita = rs.getDate("dataDiNascita").toLocalDate();
-                    return new Paziente(
+                    PazienteInfo pazienteInfo = new PazienteInfo(
                             rs.getString("nome"),
                             rs.getString("cognome"),
                             dataDiNascita,
@@ -58,6 +58,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
                             rs.getString("numeroTesseraSanitaria"),
                             rs.getString("condizioniMediche")
                     );
+                    return new Paziente(pazienteInfo);
                 }
             }
         } catch (SQLException e) {
@@ -65,7 +66,6 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
         }
         return null;
     }
-
 
     @Override
     public boolean aggiorna(Paziente paziente) {
@@ -79,7 +79,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
             stmt.setString(5, paziente.getEmail());
             stmt.setString(6, paziente.getCodiceFiscalePaziente());
             stmt.setString(7, paziente.getCondizioniMediche());
-            stmt.setString(8,paziente.getPassword());
+            stmt.setString(8, paziente.getPassword());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -112,7 +112,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
              ResultSet rs = stmt.executeQuery(selectQuery)) {
 
             while (rs.next()) {
-                Paziente paziente = new Paziente(
+                PazienteInfo pazienteInfo = new PazienteInfo(
                         rs.getString("nome"),
                         rs.getString("cognome"),
                         rs.getDate("dataDiNascita").toLocalDate(),
@@ -122,6 +122,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
                         rs.getString("numeroTesseraSanitaria"),
                         rs.getString("condizioniMediche")
                 );
+                Paziente paziente = new Paziente(pazienteInfo);
                 pazienti.add(paziente);
             }
         } catch (SQLException e) {
@@ -130,6 +131,4 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
 
         return pazienti;
     }
-
-
 }

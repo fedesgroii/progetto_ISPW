@@ -10,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utenti.Paziente;
+import utenti.PazienteInfo;
 import storage_liste.ListaPazienti;
 
 import java.time.LocalDate;
@@ -99,8 +100,9 @@ public class GestionePazientiApp extends Application {
 
                 if (!nome.isEmpty() && !cognome.isEmpty() && dataNascita != null && !telefono.isEmpty()
                         && !email.isEmpty() && !codiceFiscale.isEmpty() && !condizioniMediche.isEmpty()) {
-                    Paziente nuovoPaziente = new Paziente(nome, cognome, dataNascita, telefono, email, "",
+                    PazienteInfo pazienteInfo = new PazienteInfo(nome, cognome, dataNascita, telefono, email, "",
                             codiceFiscale, condizioniMediche);
+                    Paziente nuovoPaziente = new Paziente(pazienteInfo);
                     ListaPazienti.getIstanzaListaPazienti().aggiungiPaziente(nuovoPaziente);
                     clearFields(nomeField, cognomeField, telefonoField, emailField, codiceFiscaleField, condizioniMedicheField);
                     dataNascitaField.setValue(null);
