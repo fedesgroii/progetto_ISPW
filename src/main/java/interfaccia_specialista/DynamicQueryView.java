@@ -15,6 +15,11 @@ import java.util.List;
 
 public class DynamicQueryView {
 
+    // Costruttore privato per impedire l'instanziazione
+    private DynamicQueryView() {
+        throw new UnsupportedOperationException("Questa è una classe utility e non può essere istanziata.");
+    }
+
     /**
      * Mostra una vista dinamica con il risultato della query.
      *

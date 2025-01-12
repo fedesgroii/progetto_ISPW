@@ -1,4 +1,4 @@
-package Storage_DB;
+package storage_db;
 
 public interface DataStorageStrategy<T>{
 

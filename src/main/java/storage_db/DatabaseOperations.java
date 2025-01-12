@@ -25,7 +25,7 @@ parte del progetto, separando chiaramente le operazioni sul database
 dalla logica dell'applicazione.
  */
 
-package Storage_DB;
+package storage_db;
 
 import java.sql.*;
 import java.util.ArrayList;

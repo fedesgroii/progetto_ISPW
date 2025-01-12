@@ -1,6 +1,6 @@
 package interfaccia_specialista;
 
-import Storage_DB.DatabaseOperations;
+import storage_db.DatabaseOperations;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,16 +11,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.util.logging.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
 public class SpecialistDashboard extends Application {
+    private static final Logger logger = Logger.getLogger(SpecialistDashboard.class.getName());
 
     @Override
     public void start(Stage primaryStage) {
-        final DatabaseOperations dbo = new DatabaseOperations();
         // Creazione pulsanti
         Button btnVisualizzaDatiPazienti = new Button("Visualizza Dati Pazienti");
         Button btnVisualizzaVisiteSettimana = new Button("Visualizza Visite della Settimana");
@@ -29,10 +30,11 @@ public class SpecialistDashboard extends Application {
         Button btnLogout = new Button("Log Out");
 
         // Impostazione degli ID per lo stile CSS
-        btnVisualizzaDatiPazienti.setId("button");
-        btnVisualizzaVisiteSettimana.setId("button");
-        btnVisualizzaTutteLeVisite.setId("button");
-        btnNuovaVisita.setId("button");
+        String bottone = "button";
+        btnVisualizzaDatiPazienti.setId(bottone);
+        btnVisualizzaVisiteSettimana.setId(bottone);
+        btnVisualizzaTutteLeVisite.setId(bottone);
+        btnNuovaVisita.setId(bottone);
         btnLogout.setId("logoutButton");
 
         // Header
@@ -91,9 +93,9 @@ public class SpecialistDashboard extends Application {
         btnVisualizzaDatiPazienti.setOnAction(e -> {
             List<String> risultati = null;
             try {
-                risultati = dbo.executeQuery("SELECT * FROM pazienti");
+                risultati = DatabaseOperations.executeQuery("SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti");
             } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                logger.severe("Errore durante l'esecuzione della query sui pazienti: " + ex.getMessage());
             }
 
             DynamicQueryView.show(
@@ -101,7 +103,7 @@ public class SpecialistDashboard extends Application {
                     "Dati Pazienti",
                     "Elenco dei pazienti registrati nel sistema:",
                     risultati,
-                    () -> primaryStage.show() // Ritorno alla dashboard
+                    primaryStage::show // Ritorno alla dashboard
             );
 
             primaryStage.hide(); // Nasconde la finestra principale mentre mostra quella nuova

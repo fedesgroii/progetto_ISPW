@@ -1,4 +1,4 @@
-package Storage_DB;
+package storage_db;
 import utenti.Paziente;
 import java.sql.*;
 import java.time.LocalDate;
@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static Storage_DB.DatabaseConnection.getConnection;
+import static storage_db.DatabaseConnection.getConnection;
 
 public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Paziente> {
     private static final Logger logger = Logger.getLogger(DatabaseStorageStrategyPaziente.class.getName());
 
     private static final String INSERT_QUERY = "INSERT INTO pazienti (nome, cognome, dataDiNascita, numeroTelefonico, email, numeroTesseraSanitaria, condizioniMediche, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SELECT_QUERY = "SELECT * FROM pazienti WHERE numeroTesseraSanitaria = ?";
+    private static final String SELECT_QUERY = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti WHERE numeroTesseraSanitaria=?";
     private static final String UPDATE_QUERY = "UPDATE pazienti SET nome = ?, cognome = ?, dataDiNascita = ?, numeroTelefonico = ?, email = ?, numeroTesseraSanitaria = ?, condizioniMediche = ?, password = ? WHERE numeroTesseraSanitaria = ?";
     private static final String DELETE_QUERY = "DELETE FROM pazienti WHERE numeroTesseraSanitaria = ?";
 
@@ -105,7 +105,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
 
     public List<Paziente> getAllPazienti() {
         List<Paziente> pazienti = new ArrayList<>();
-        String selectQuery = "SELECT * FROM pazienti";
+        String selectQuery = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti";
 
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();

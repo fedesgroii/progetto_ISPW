@@ -1,16 +1,15 @@
 package utenti;
 
-import java.time.LocalDate;
 
 public class Paziente extends Persona {
     private String codiceFiscalePaziente;
     private String condizioniMediche;
 
     // Costruttore
-    public Paziente(String nome, String cognome, LocalDate dataDiNascita, String numeroTelefonico, String email, String password, String numeroTesseraSanitaria, String condizioniMediche) {
-        super(nome, cognome, dataDiNascita, numeroTelefonico, email, password);
-        this.codiceFiscalePaziente = numeroTesseraSanitaria;
-        this.condizioniMediche = condizioniMediche;
+    public Paziente(PazienteInfo pazienteInfo) {
+        super(pazienteInfo.getNome(), pazienteInfo.getCognome(), pazienteInfo.getDataDiNascita(), pazienteInfo.getNumeroTelefonico(), pazienteInfo.getEmail(), pazienteInfo.getPassword());
+        this.codiceFiscalePaziente = pazienteInfo.getNumeroTesseraSanitaria();
+        this.condizioniMediche = pazienteInfo.getCondizioniMediche();
     }
 
     // Getter e Setter

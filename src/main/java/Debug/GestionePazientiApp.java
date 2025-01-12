@@ -1,4 +1,4 @@
-package DEBUG;
+package Debug;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utenti.Paziente;
-import Storage_Liste.ListaPazienti;
+import storage_liste.ListaPazienti;
 
 import java.time.LocalDate;
 
@@ -18,8 +18,9 @@ public class GestionePazientiApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        String errore = "Errore";
         // Ottenere la lista osservabile
-        ObservableList<Paziente> listaPazienti = ListaPazienti.getIstanzaListaPazienti().getListaPazienti();
+        ObservableList<Paziente> listaPazienti = ListaPazienti.getIstanzaListaPazienti().getObservableListaPazienti();
 
         // TableView per visualizzare i pazienti
         TableView<Paziente> tableView = new TableView<>();
@@ -104,10 +105,10 @@ public class GestionePazientiApp extends Application {
                     clearFields(nomeField, cognomeField, telefonoField, emailField, codiceFiscaleField, condizioniMedicheField);
                     dataNascitaField.setValue(null);
                 } else {
-                    showAlert("Errore", "Tutti i campi devono essere compilati.");
+                    showAlert(errore, "Tutti i campi devono essere compilati.");
                 }
             } catch (Exception ex) {
-                showAlert("Errore", "Errore nell'aggiunta del paziente: " + ex.getMessage());
+                showAlert(errore, "Errore nell'aggiunta del paziente: " + ex.getMessage());
             }
         });
 
@@ -125,7 +126,7 @@ public class GestionePazientiApp extends Application {
                 clearFields(nomeField, cognomeField, telefonoField, emailField, codiceFiscaleField, condizioniMedicheField);
                 dataNascitaField.setValue(null);
             } else {
-                showAlert("Errore", "Seleziona un paziente per aggiornare.");
+                showAlert(errore, "Seleziona un paziente per aggiornare.");
             }
         });
 
@@ -134,7 +135,7 @@ public class GestionePazientiApp extends Application {
             if (selezionato != null) {
                 ListaPazienti.getIstanzaListaPazienti().rimuoviPaziente(selezionato.getCodiceFiscalePaziente());
             } else {
-                showAlert("Errore", "Seleziona un paziente per rimuovere.");
+                showAlert(errore, "Seleziona un paziente per rimuovere.");
             }
         });
 
