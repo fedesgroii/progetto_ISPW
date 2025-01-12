@@ -1,4 +1,4 @@
-package Debug;
+package debug;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,8 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import utenti.Paziente;
-import utenti.PazienteInfo;
+import model.Paziente;
+import model.PazienteInfo;
 import storage_liste.ListaPazienti;
 
 import java.time.LocalDate;

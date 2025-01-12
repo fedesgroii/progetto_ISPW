@@ -1,6 +1,4 @@
-package utenti;
-
-import com.sun.javafx.binding.SelectBinding;
+package model;
 
 import java.time.LocalDate;
 

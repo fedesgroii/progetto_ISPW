@@ -1,4 +1,4 @@
-package utenti;
+package model;
 
 
 public class Paziente extends Persona {

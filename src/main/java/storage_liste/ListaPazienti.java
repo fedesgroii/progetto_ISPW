@@ -2,7 +2,7 @@ package storage_liste;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import utenti.Paziente;
+import model.Paziente;
 
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -10,14 +10,14 @@ import java.util.logging.Logger;
 public class ListaPazienti {
     private static final Logger logger = Logger.getLogger(ListaPazienti.class.getName());
     // Lista osservabile di pazienti (utile per JavaFX)
-    private final ObservableList<Paziente> ObservableListaPazienti;
+    private final ObservableList<Paziente> observableListaPazienti;
 
     // Variabile statica per contenere l'unica istanza della classe (Singleton)
     private static ListaPazienti istanzaListaPazienti;
 
     // Costruttore privato per evitare istanziazioni multiple
     private ListaPazienti() {
-        ObservableListaPazienti = FXCollections.observableArrayList(); // Usando ObservableList
+        observableListaPazienti = FXCollections.observableArrayList(); // Usando ObservableList
     }
 
     // Metodo statico per ottenere l'unica istanza della classe
@@ -30,14 +30,14 @@ public class ListaPazienti {
 
     // Metodo per aggiungere un paziente alla lista
     public void aggiungiPaziente(Paziente paziente) {
-        ObservableListaPazienti.add(paziente);
+        observableListaPazienti.add(paziente);
     }
 
     // Metodo per rimuovere un paziente dalla lista (per codice fiscale)
     public boolean rimuoviPaziente(String codiceFiscale) {
-        for (Paziente paziente : ObservableListaPazienti) {
+        for (Paziente paziente : observableListaPazienti) {
             if (paziente.getCodiceFiscalePaziente().equals(codiceFiscale)) {
-                ObservableListaPazienti.remove(paziente);
+                observableListaPazienti.remove(paziente);
                 return true;
             }
         }
@@ -47,10 +47,10 @@ public class ListaPazienti {
 
     // Metodo per visualizzare la lista di pazienti
     public void visualizzaPazienti() {
-        if (ObservableListaPazienti.isEmpty()) {
+        if (observableListaPazienti.isEmpty()) {
             logger.info("Nessun paziente registrato.");
         } else {
-            for (Paziente paziente : ObservableListaPazienti) {
+            for (Paziente paziente : observableListaPazienti) {
                 logger.info((Supplier<String>) paziente);
             }
         }
@@ -59,7 +59,7 @@ public class ListaPazienti {
 
     // Metodo per trovare un paziente per codice fiscale
     public Paziente trovaPaziente(String codiceFiscale) {
-        for (Paziente paziente : ObservableListaPazienti) {
+        for (Paziente paziente : observableListaPazienti) {
             if (paziente.getCodiceFiscalePaziente().equals(codiceFiscale)) {
                 return paziente;
             }
@@ -68,6 +68,6 @@ public class ListaPazienti {
     }
 // **Metodo per ottenere la lista osservabile di pazienti**
     public ObservableList<Paziente> getObservableListaPazienti() {
-        return ObservableListaPazienti;
+        return observableListaPazienti;
     }
 }

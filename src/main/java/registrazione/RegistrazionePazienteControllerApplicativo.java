@@ -3,8 +3,8 @@ package registrazione;
 import storage_db.DatabaseStorageStrategyPaziente;  // Importa la strategia di salvataggio su database per i pazienti
 import storage_liste.ListaPazienti;
 import startupconfig.StartupSettingsEntity;  // Importa la classe per gestire le configurazioni iniziali
-import utenti.Paziente;  // Importa la classe Paziente
-import utenti.PazienteInfo;  // Importa la classe PazienteInfo
+import model.Paziente;  // Importa la classe Paziente
+import model.PazienteInfo;  // Importa la classe PazienteInfo
 import java.time.LocalDate;  // Importa la classe LocalDate per la gestione delle date
 import java.time.format.DateTimeParseException;  // Importa la classe per gestire eccezioni nel parsing delle date
 

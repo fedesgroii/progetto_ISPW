@@ -1,6 +1,6 @@
 package startupconfig;
 
-import Debug.GestionePazientiApp;
+import debug.GestionePazientiApp;
 import javafx.application.Application; // Importa la classe base per un'applicazione JavaFX
 import javafx.geometry.Insets; // Importa per gestire i margini interni (padding)
 import javafx.geometry.Pos; // Importa per gestire l'allineamento dei componenti

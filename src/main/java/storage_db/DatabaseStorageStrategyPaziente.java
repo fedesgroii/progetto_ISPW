@@ -1,6 +1,6 @@
 package storage_db;
-import utenti.Paziente;
-import utenti.PazienteInfo;
+import model.Paziente;
+import model.PazienteInfo;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
