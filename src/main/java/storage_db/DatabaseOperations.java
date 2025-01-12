@@ -1,42 +1,21 @@
-/*
-
-Spiegazione del codice
-Costruzione del design:
-La classe utilizza i metodi della tua DatabaseConnection per ottenere
-la connessione.
-Contiene metodi statici per semplificare l'accesso
-(puoi chiamarli direttamente senza creare un'istanza della classe).
-Esecuzione delle query SELECT:
-Il metodo executeQuery esegue una query SQL e restituisce
-i risultati sotto forma di lista di stringhe, con ogni riga come
-stringa separata.
-
-Il metodo executeUpdate esegue query SQL di tipo INSERT, UPDATE, o DELETE.
-Restituisce il numero di righe che sono state modificate o interessate dalla query.
-
-Grazie al costrutto try-with-resources, la connessione,
-lo statement e il result set vengono chiusi automaticamente,
-anche in caso di errore. Questo migliora la gestione
-delle risorse ed evita problemi come il leak delle connessioni.
-
-
-La classe è pensata per essere generica e riutilizzabile in ogni
-parte del progetto, separando chiaramente le operazioni sul database
-dalla logica dell'applicazione.
- */
-
 package storage_db;
+
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Classe che gestisce le operazioni sul database.
  * Si appoggia a DatabaseConnection per ottenere la connessione.
  */
 public class DatabaseOperations {
-
+    private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
+   //costruttore privato per nascondere il costruttore pubblico implicito
+    private DatabaseOperations(){
+        logger.info("DatabaseConnection constructor called.");
+    }
     /**
      * Esegue una query SELECT e restituisce i risultati come una lista di stringhe.
      *
@@ -44,6 +23,7 @@ public class DatabaseOperations {
      * @return Una lista di righe, ciascuna rappresentata come stringa.
      * @throws SQLException Se si verifica un errore durante l'esecuzione.
      */
+
     public static List<String> executeQuery(String query) throws SQLException {
         // Lista per contenere i risultati della query
         List<String> risultati = new ArrayList<>();

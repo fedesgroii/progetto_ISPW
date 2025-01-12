@@ -1,6 +1,5 @@
 package storage_db;
 
-import storage_liste.ListaPazienti;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -41,8 +40,9 @@ public class DatabaseConnection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException e) {
-            logger.severe("JDBC driver not found: " + e.getMessage());
-            throw new SQLException("JDBC driver not found.", e);
+            String errorMessage = "JDBC driver not found: " + e.getMessage();
+            logger.severe(errorMessage);
+            throw new SQLException(errorMessage, e);
         }
     }
 }

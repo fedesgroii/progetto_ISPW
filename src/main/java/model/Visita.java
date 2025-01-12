@@ -1,7 +1,5 @@
 package model;
 
-import javafx.scene.control.Button;
-
 // Classe per rappresentare una visita
 public class Visita {
     private String nome;
