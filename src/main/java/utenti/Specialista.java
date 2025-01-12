@@ -1,11 +1,15 @@
 package utenti;
 
+import com.sun.javafx.binding.SelectBinding;
+
+import java.time.LocalDate;
+
 public class Specialista extends Persona {
     private String specializzazione;
 
     // Costruttore
-    public Specialista(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email, String specializzazione) {
-        super(nome, cognome, dataDiNascita, numeroTelefonico, email);
+    public Specialista(String nome, String cognome, LocalDate dataDiNascita, String numeroTelefonico, String email, String specializzazione, String password) {
+        super(nome, cognome, dataDiNascita, numeroTelefonico, email,password);
         this.specializzazione = specializzazione;
     }
 

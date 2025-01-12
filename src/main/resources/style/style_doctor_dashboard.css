@@ -1,0 +1,75 @@
+/* Stile generale */
+#main-container {
+    -fx-background-color: #ffffff; /* Imposta il colore di sfondo del contenitore principale a bianco (#ffffff). */
+}
+
+/* Header */
+#header {
+    -fx-background-color: #008000; /* Imposta lo sfondo dell'header a verde (#008000). */
+    -fx-padding: 20px; /* Aggiunge 20px di spazio interno (padding) su tutti i lati del contenuto dell'header. */
+}
+
+.header-text {
+    -fx-font-size: 20px; /* Imposta la dimensione del testo dell'header a 20px. */
+    -fx-fill: #ffffff; /* Imposta il colore del testo a bianco (#ffffff). */
+    -fx-font-weight: bold; /* Rende il testo in grassetto. */
+}
+
+/* Contenitore pulsanti */
+#button-container {
+    -fx-spacing: 20px; /* Imposta una spaziatura di 20px tra i pulsanti all'interno del contenitore. */
+}
+
+/* Pulsanti generici */
+#button {
+    -fx-background-color: #008000; /* Colore di sfondo del pulsante impostato a verde (#008000). */
+    -fx-text-fill: #ffffff; /* Colore del testo del pulsante impostato a bianco (#ffffff). */
+    -fx-font-size: 18px; /* Dimensione del testo del pulsante aumentata a 18px. */
+    -fx-font-weight: bold; /* Rende il testo del pulsante in grassetto. */
+    -fx-padding: 15px 30px; /* Aggiunge 15px di padding verticale e 30px orizzontale al pulsante. */
+    -fx-border-radius: 8px; /* Arrotonda i bordi del pulsante con un raggio di 8px. */
+    -fx-background-radius: 8px; /* Arrotonda lo sfondo del pulsante con un raggio di 8px. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 2, 2);
+    /* Aggiunge un'ombra con effetto drop shadow:
+       - gaussian: Usa una sfocatura gaussiana.
+       - rgba(0, 0, 0, 0.3): Colore dell'ombra nero con opacità 30%.
+       - 10: Raggio di sfocatura dell'ombra.
+       - 0.5: Livello di diffusione dell'ombra.
+       - 2, 2: Spostamento orizzontale e verticale dell'ombra di 2px. */
+}
+
+#button:hover {
+    -fx-background-color: #006400; /* Cambia il colore di sfondo a verde scuro (#006400) quando il pulsante è in hover. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 12, 0.7, 3, 3);
+    /* Aggiunge un'ombra più pronunciata in hover:
+       - rgba(0, 0, 0, 0.5): Nero con opacità 50%.
+       - 12: Raggio di sfocatura aumentato.
+       - 0.7: Livello di diffusione aumentato.
+       - 3, 3: Spostamento aumentato a 3px. */
+}
+
+/* Pulsante di logout */
+#logoutButton {
+    -fx-background-color: #34931e; /* Colore di sfondo del pulsante di logout impostato a un verde più chiaro (#34931e). */
+    -fx-text-fill: #ffffff; /* Colore del testo impostato a bianco (#ffffff). */
+    -fx-font-size: 18px; /* Dimensione del testo impostata a 18px. */
+    -fx-font-weight: bold; /* Rende il testo in grassetto. */
+    -fx-padding: 15px 30px; /* Aggiunge 15px di padding verticale e 30px orizzontale. */
+    -fx-border-radius: 8px; /* Arrotonda i bordi con un raggio di 8px. */
+    -fx-background-radius: 8px; /* Arrotonda lo sfondo con un raggio di 8px. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 2, 2);
+    /* Aggiunge un'ombra simile ai pulsanti generici. */
+}
+
+#logoutButton:hover {
+    -fx-background-color: #d31212; /* Cambia il colore di sfondo a rosso scuro (#d31212) in hover. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 12, 0.7, 3, 3);
+    /* Aggiunge un'ombra più pronunciata quando il pulsante è in hover. */
+}
+
+/* Footer */
+#footer {
+    -fx-background-color: #008000; /* Imposta il colore di sfondo del footer a verde (#008000). */
+    -fx-padding: 10px; /* Aggiunge 10px di spazio interno (padding) su tutti i lati del contenuto del footer. */
+    -fx-alignment: center; /* Centra il contenuto del footer. */
+}

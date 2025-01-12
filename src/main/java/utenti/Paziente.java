@@ -1,22 +1,25 @@
 package utenti;
 
+import java.time.LocalDate;
+
 public class Paziente extends Persona {
-    private String numeroTesseraSanitaria;
+    private String codiceFiscalePaziente;
     private String condizioniMediche;
+
     // Costruttore
-    public Paziente(String nome, String cognome, String dataDiNascita, String numeroTelefonico, String email, String numeroTesseraSanitaria, String condizioniMediche) {
-        super(nome, cognome, dataDiNascita, numeroTelefonico, email);
-        this.numeroTesseraSanitaria = numeroTesseraSanitaria;
+    public Paziente(String nome, String cognome, LocalDate dataDiNascita, String numeroTelefonico, String email, String password, String numeroTesseraSanitaria, String condizioniMediche) {
+        super(nome, cognome, dataDiNascita, numeroTelefonico, email, password);
+        this.codiceFiscalePaziente = numeroTesseraSanitaria;
         this.condizioniMediche = condizioniMediche;
     }
 
     // Getter e Setter
-    public String getNumeroTesseraSanitaria() {
-        return numeroTesseraSanitaria;
+    public String getCodiceFiscalePaziente() {
+        return codiceFiscalePaziente;
     }
 
-    public void setNumeroTesseraSanitaria(String numeroTesseraSanitaria) {
-        this.numeroTesseraSanitaria = numeroTesseraSanitaria;
+    public void setCodiceFiscalePaziente(String codiceFiscalePaziente) {
+        this.codiceFiscalePaziente = codiceFiscalePaziente;
     }
 
     public String getCondizioniMediche() {
@@ -29,9 +32,16 @@ public class Paziente extends Persona {
 
     @Override
     public String toString() {
-        return super.toString() + ", Paziente{" +
-                "numeroTesseraSanitaria='" + numeroTesseraSanitaria + '\'' +
+        return "Paziente{" +
+                "nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", dataDiNascita=" + dataDiNascita +
+                ", numeroTelefonico='" + numeroTelefonico + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", codiceFiscalePaziente='" + codiceFiscalePaziente + '\'' +
                 ", condizioniMediche='" + condizioniMediche + '\'' +
                 '}';
     }
+
 }

@@ -1,5 +1,6 @@
 package startupconfig;
 
+import DEBUG.GestionePazientiApp;
 import javafx.application.Application; // Importa la classe base per un'applicazione JavaFX
 import javafx.geometry.Insets; // Importa per gestire i margini interni (padding)
 import javafx.geometry.Pos; // Importa per gestire l'allineamento dei componenti
@@ -92,11 +93,13 @@ public class StartupSettingsBoundary extends Application {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/style_avvio.css")).toExternalForm()); // Aggiunge lo stile CSS
         primaryStage.setScene(scene); // Imposta la scena sulla finestra principale
         primaryStage.setFullScreen(true); // Imposta la finestra a schermo intero
+        primaryStage.setResizable(false);
         primaryStage.show(); // Mostra la finestra
     }
 
     public static void main(String[] args) {
         // Metodo main per avviare l'applicazione
-        launch(args); // Metodo JavaFX per avviare l'interfaccia
+        //launch(args); // Metodo JavaFX per avviare l'interfaccia
+        GestionePazientiApp.launch(GestionePazientiApp.class, args);
     }
 }

@@ -16,12 +16,16 @@ public class RegistrazionePazienteView {
     private Text errorTextDataDiNascita;
     private Text errorTextNumeroTelefonico;
     private Text errorTextEmail;
+    private Text errorTextCodiceFiscale;
+    private Text errorTextPassword;
 
     protected TextField nomeField;
     protected TextField cognomeField;
     protected TextField dataDiNascitaField;
     protected TextField numeroTelefonicoField;
     protected TextField emailField;
+    protected TextField codiceFiscaleField;
+    protected TextField passwordField;
 
     private final RegistrazionePazienteControllerApplicativo controllerApplicativo = new RegistrazionePazienteControllerApplicativo(this);
 
@@ -77,6 +81,22 @@ public class RegistrazionePazienteView {
         emailField.setPromptText("Inserisci la tua email");
         emailField.setId(INPUT_FIELD);
 
+        errorTextPassword = new Text("Errore nell'inserimento della password, correggi");
+        errorTextPassword.setId(ERRORE);
+        errorTextPassword.setVisible(false);
+
+        passwordField = new TextField();
+        passwordField.setPromptText("Inserisci la tua password");
+        passwordField.setId(INPUT_FIELD);
+
+        errorTextCodiceFiscale = new Text("Errore nell'inserimento del codice fiscale, correggi");
+        errorTextCodiceFiscale.setId(ERRORE);
+        errorTextCodiceFiscale.setVisible(false);
+
+        codiceFiscaleField = new TextField();
+        codiceFiscaleField.setPromptText("Inserisci il tuo codice fiscale");
+        codiceFiscaleField.setId(INPUT_FIELD);
+
         Button submitButton = new Button("Registrati");
         submitButton.setId("specialistButton");
         submitButton.setOnAction(event -> {
@@ -91,7 +111,7 @@ public class RegistrazionePazienteView {
         backButton.setId("backButton");
         backButton.setOnAction(event -> primaryStage.close());
 
-        VBox vbox = new VBox(20, title, subtitle, nomeField, errorTextNome, cognomeField, errorTextCognome, dataDiNascitaField, errorTextDataDiNascita, numeroTelefonicoField, errorTextNumeroTelefonico, emailField, errorTextEmail, submitButton, backButton);
+        VBox vbox = new VBox(20, title, subtitle,errorTextNome, nomeField, errorTextCognome, cognomeField,errorTextDataDiNascita, dataDiNascitaField,errorTextNumeroTelefonico,numeroTelefonicoField,errorTextEmail,emailField, errorTextPassword,passwordField,errorTextCodiceFiscale,codiceFiscaleField,submitButton, backButton);
         vbox.setId("vbox");
         Scene scene = new Scene(vbox);
         // Carica il file CSS
@@ -128,6 +148,43 @@ public class RegistrazionePazienteView {
 
     public void showErrorEmail() {
         errorTextEmail.setVisible(true);
+    }
+
+    public void showErrorCodiceFiscale() {
+        errorTextCodiceFiscale.setVisible(true);
+    }
+
+    public void showErrorPassword() {
+        errorTextPassword.setVisible(true);
+    }
+
+    // Metodi per nascondere gli errori
+    public void hideErrorNome() {
+        errorTextNome.setVisible(false);
+    }
+
+    public void hideErrorCognome() {
+        errorTextCognome.setVisible(false);
+    }
+
+    public void hideErrorDataDiNascita() {
+        errorTextDataDiNascita.setVisible(false);
+    }
+
+    public void hideErrorNumeroTelefonico() {
+        errorTextNumeroTelefonico.setVisible(false);
+    }
+
+    public void hideErrorEmail() {
+        errorTextEmail.setVisible(false);
+    }
+
+    public void hideErrorCodiceFiscale() {
+        errorTextCodiceFiscale.setVisible(false);
+    }
+
+    public void hideErrorPassword() {
+        errorTextPassword.setVisible(false);
     }
 
     public void hideAllErrors() {

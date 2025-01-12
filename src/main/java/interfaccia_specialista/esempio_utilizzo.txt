@@ -1,0 +1,44 @@
+Questo è un esempio di utilizzo per la classe QueryResultView, permette di visualizzare il risultato della query.
+
+Ecco come usare questa classe nell'interfaccia principale, come quella dello specialista:
+
+btnVisualizzaDatiPazienti.setOnAction(e -> {
+    List<String> risultati = DatabaseHelper.eseguiQuery("SELECT * FROM pazienti");
+    DynamicQueryView.show(new Stage(),
+        "Dati Pazienti",
+        "Elenco dei pazienti registrati nel sistema:",
+        risultati,
+        () -> primaryStage.show() // Mostra di nuovo la dashboard
+    );
+});
+
+
+
+Esempio con una Query Simulata
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import java.util.Arrays;
+
+public class TestDynamicView extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Simulazione risultati
+        DynamicQueryView.show(primaryStage,
+            "Elenco Appuntamenti",
+            "Questi sono gli appuntamenti programmati per la settimana:",
+            Arrays.asList(
+                "Mario Rossi, 10/01/2025, 15:30",
+                "Luisa Verdi, 12/01/2025, 10:00",
+                "Giulia Bianchi, 13/01/2025, 09:45"
+            ),
+            () -> System.out.println("Ritorno alla schermata precedente") // Azione "Torna Indietro"
+        );
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}

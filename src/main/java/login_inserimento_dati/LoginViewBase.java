@@ -47,7 +47,7 @@ public abstract class LoginViewBase {
             }
         });
 
-        Button backButton = new Button("Torna indietro");
+        Button backButton = new Button("Pagina Scelta Login");
         backButton.setId("backButton");
         backButton.setOnAction(event -> primaryStage.close());
 
