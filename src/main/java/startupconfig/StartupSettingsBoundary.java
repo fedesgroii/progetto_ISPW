@@ -1,6 +1,5 @@
 package startupconfig;
 
-import debug.GestionePazientiApp;
 import javafx.application.Application; // Importa la classe base per un'applicazione JavaFX
 import javafx.geometry.Insets; // Importa per gestire i margini interni (padding)
 import javafx.geometry.Pos; // Importa per gestire l'allineamento dei componenti
@@ -17,6 +16,7 @@ import javafx.scene.text.Text; // Importa per visualizzare testo
 import javafx.stage.Stage; // Importa per rappresentare la finestra principale
 import javafx.stage.Screen; // Importa per ottenere informazioni sullo schermo
 import login.LoginView;
+import work_in_progress.FunctionalityUnavailableView;
 
 import java.util.Objects; // Importa per confronti e manipolazioni di oggetti null-safe
 
@@ -100,6 +100,7 @@ public class StartupSettingsBoundary extends Application {
     public static void main(String[] args) {
         // Metodo main per avviare l'applicazione
         //launch(args); // Metodo JavaFX per avviare l'interfaccia
-        GestionePazientiApp.launch(GestionePazientiApp.class, args);
+       //Home.launch(Home.class, args);
+        FunctionalityUnavailableView.launch(FunctionalityUnavailableView.class,args);
     }
 }

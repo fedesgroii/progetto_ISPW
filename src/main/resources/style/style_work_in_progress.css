@@ -1,0 +1,51 @@
+/* Layout principale */
+#root {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+    -fx-padding: 30px;
+    -fx-background-color: #f4f4f4;
+}
+
+/* Icona */
+#icon {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.5, 0, 3);
+}
+
+/* Messaggio principale */
+#message {
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial Black";
+    -fx-fill: #333;
+    -fx-text-alignment: center;
+}
+
+/* Testo descrittivo */
+#description {
+    -fx-font-size: 16px;
+    -fx-font-family: "Arial";
+    -fx-fill: #666;
+    -fx-text-alignment: center;
+    -fx-wrap-text: true;
+    -fx-padding: 0 20px;
+}
+
+/* Bottone Torna Indietro */
+#backButton {
+    -fx-font-size: 16px;
+    -fx-font-family: "Arial";
+    -fx-background-color: #0078d7;
+    -fx-text-fill: white;
+    -fx-padding: 10px 25px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 4, 0.3, 0, 2);
+}
+
+#backButton:hover {
+    -fx-background-color: #005a9e;
+}
+
+#backButton:pressed {
+    -fx-background-color: #003e70;
+}

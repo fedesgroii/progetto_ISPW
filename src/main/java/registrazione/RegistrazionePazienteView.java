@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import login_inserimento_dati.LoginViewPatient;
 import startupconfig.StartupSettingsEntity;
 
+import java.util.Objects;
+
 public class RegistrazionePazienteView {
     // Campi nascosti per mostrare eventuali errori nell'inserimento dati
     private Text errorTextNome;
@@ -18,6 +20,7 @@ public class RegistrazionePazienteView {
     private Text errorTextEmail;
     private Text errorTextCodiceFiscale;
     private Text errorTextPassword;
+    private Text erroreGenerico;
 
     protected TextField nomeField;
     protected TextField cognomeField;
@@ -26,20 +29,23 @@ public class RegistrazionePazienteView {
     protected TextField emailField;
     protected TextField codiceFiscaleField;
     protected TextField passwordField;
-
-    private final RegistrazionePazienteControllerApplicativo controllerApplicativo = new RegistrazionePazienteControllerApplicativo(this);
+    protected String testoErrore;
 
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
     private static final String INPUT_FIELD = "inputField";
     private static final String ERRORE = "errorText";
 
     public void start(Stage primaryStage) {
+        final RegistrazionePazienteControllerApplicativo controllerApplicativo = new RegistrazionePazienteControllerApplicativo(this);
 
         Text title = new Text("Registrazione");
         title.setId("title");
 
         Text subtitle = new Text("Inserisci i tuoi dati");
         subtitle.setId("subtitle");
+        erroreGenerico = new Text(testoErrore);
+        erroreGenerico.setId(ERRORE);
+        erroreGenerico.setVisible(false);
 
         errorTextNome = new Text("Errore nell'inserimento del nome, correggi");
         errorTextNome.setId(ERRORE);
@@ -116,10 +122,10 @@ public class RegistrazionePazienteView {
         Scene scene = new Scene(vbox);
         // Carica il file CSS
         if (config.isColorMode()) {
-            String colorStyle = getClass().getResource("/style/style_registrazione_paziente_a_colori.css").toExternalForm();
+            String colorStyle = Objects.requireNonNull(getClass().getResource("/style/style_registrazione_paziente_a_colori.css")).toExternalForm();
             scene.getStylesheets().add(colorStyle);
         } else {
-            String bnStyle = getClass().getResource("/style/style_registrazione_paziente_bn.css").toExternalForm();
+            String bnStyle = Objects.requireNonNull(getClass().getResource("/style/style_registrazione_paziente_bn.css")).toExternalForm();
             scene.getStylesheets().add(bnStyle);
         }
         primaryStage.setTitle("Registrazione");
@@ -187,6 +193,16 @@ public class RegistrazionePazienteView {
         errorTextPassword.setVisible(false);
     }
 
+    // errore generico
+    public void showGenericError(String text){
+        testoErrore = text;
+        erroreGenerico.setVisible(true);
+    }
+
+    public void hideGenericError(){
+        testoErrore = null;
+        erroreGenerico.setVisible(false);
+    }
     public void hideAllErrors() {
         errorTextNome.setVisible(false);
         errorTextCognome.setVisible(false);

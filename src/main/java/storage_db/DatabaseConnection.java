@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Logger;
-
+// sudo /usr/local/mysql/support-files/mysql.server start
 public class DatabaseConnection {
     private static final String CONFIG_FILE = "dbconfig.properties";
     private static String url;

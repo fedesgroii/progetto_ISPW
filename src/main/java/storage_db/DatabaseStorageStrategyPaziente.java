@@ -1,6 +1,6 @@
 package storage_db;
+
 import model.Paziente;
-import model.PazienteInfo;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,17 +48,19 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     LocalDate dataDiNascita = rs.getDate("dataDiNascita").toLocalDate();
-                    PazienteInfo pazienteInfo = new PazienteInfo(
-                            rs.getString("nome"),
-                            rs.getString("cognome"),
-                            dataDiNascita,
-                            rs.getString("numeroTelefonico"),
-                            rs.getString("email"),
-                            null, // Passa null come password, non mi serve per trovare un paziente
-                            rs.getString("numeroTesseraSanitaria"),
-                            rs.getString("condizioniMediche")
-                    );
-                    return new Paziente(pazienteInfo);
+
+                    // Utilizzo del Builder per creare l'oggetto Paziente
+                    Paziente pazienteRecuperato = new Paziente.Builder()
+                            .nome(rs.getString("nome"))
+                            .cognome(rs.getString("cognome"))
+                            .dataDiNascita(LocalDate.parse(dataDiNascita.toString())) // Convertiamo la data in formato String
+                            .numeroTelefonico(rs.getString("numeroTelefonico"))
+                            .email(rs.getString("email"))
+                            .codiceFiscalePaziente(rs.getString("numeroTesseraSanitaria"))
+                            .condizioniMediche(rs.getString("condizioniMediche"))
+                            .build();
+
+                    return pazienteRecuperato;
                 }
             }
         } catch (SQLException e) {
@@ -112,17 +114,19 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
              ResultSet rs = stmt.executeQuery(selectQuery)) {
 
             while (rs.next()) {
-                PazienteInfo pazienteInfo = new PazienteInfo(
-                        rs.getString("nome"),
-                        rs.getString("cognome"),
-                        rs.getDate("dataDiNascita").toLocalDate(),
-                        rs.getString("numeroTelefonico"),
-                        rs.getString("email"),
-                        null, // Passa null per la password
-                        rs.getString("numeroTesseraSanitaria"),
-                        rs.getString("condizioniMediche")
-                );
-                Paziente paziente = new Paziente(pazienteInfo);
+                LocalDate dataDiNascita = rs.getDate("dataDiNascita").toLocalDate();
+
+                // Utilizzo del Builder per creare l'oggetto Paziente
+                Paziente paziente = new Paziente.Builder()
+                        .nome(rs.getString("nome"))
+                        .cognome(rs.getString("cognome"))
+                        .dataDiNascita(LocalDate.parse(dataDiNascita.toString()))
+                        .numeroTelefonico(rs.getString("numeroTelefonico"))
+                        .email(rs.getString("email"))
+                        .codiceFiscalePaziente(rs.getString("numeroTesseraSanitaria"))
+                        .condizioniMediche(rs.getString("condizioniMediche"))
+                        .build();
+
                 pazienti.add(paziente);
             }
         } catch (SQLException e) {

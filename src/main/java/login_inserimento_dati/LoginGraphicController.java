@@ -1,4 +1,3 @@
-// Graphic Controller
 package login_inserimento_dati;
 
 public class LoginGraphicController {
@@ -8,8 +7,7 @@ public class LoginGraphicController {
         this.view = view;
     }
 
-    protected void showError() {
+    public void showError() {
         view.showError();
     }
-    }
-
+}

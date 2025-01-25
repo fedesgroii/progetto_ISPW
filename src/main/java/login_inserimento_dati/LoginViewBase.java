@@ -7,7 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import login.LoginView;
 import startupconfig.StartupSettingsEntity;
+
+import java.util.Objects;
 
 public abstract class LoginViewBase {
     private Text errorText;
@@ -39,27 +42,13 @@ public abstract class LoginViewBase {
         passwordField.setPromptText("Inserisci la tua password");
         passwordField.setId("inputField");
 
-        Button loginButton = new Button("Accedi");
-        loginButton.setId("specialistButton");
-        loginButton.setOnAction(event -> {
-            if (controllerApplicativo != null) {
-                controllerApplicativo.checkCredentials(getTipo(), emailField.getText(), passwordField.getText());
-            }
-        });
-
-        Button backButton = new Button("Pagina Scelta Login");
-        backButton.setId("backButton");
-        backButton.setOnAction(event -> primaryStage.close());
-
-        VBox vbox = new VBox(20, title, subtitle, errorText, emailField, passwordField, loginButton, backButton);
-        vbox.setId("vbox");
-        Scene scene = new Scene(vbox);
+        Scene scene = getScene(primaryStage, title, subtitle);
 
         if (config.isColorMode()) {
-            String colorStyle = getClass().getResource("/style/style_login_insert_specialist_a_colori.css").toExternalForm();
+            String colorStyle = Objects.requireNonNull(getClass().getResource("/style/style_login_insert_specialist_a_colori.css")).toExternalForm();
             scene.getStylesheets().add(colorStyle);
         } else {
-            String bnStyle = getClass().getResource("/style/style_login_insert_specialist_bn.css").toExternalForm();
+            String bnStyle = Objects.requireNonNull(getClass().getResource("/style/style_login_insert_specialist_bn.css")).toExternalForm();
             scene.getStylesheets().add(bnStyle);
         }
 
@@ -69,6 +58,42 @@ public abstract class LoginViewBase {
         primaryStage.setResizable(false);
 
         primaryStage.show();
+    }
+
+    private Scene getScene(Stage primaryStage, Text title, Text subtitle) {
+        Button loginButton = new Button("Accedi");
+        loginButton.setId("specialistButton");
+        loginButton.setOnAction(event -> {
+            String email = emailField.getText();
+            String password = passwordField.getText();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                showError(); // Mostra errore se i campi sono vuoti
+            } else {
+                boolean esito = controllerApplicativo.checkCredentials(getTipo(), email, password);
+                if (!esito) {
+                    showError(); // Mostra errore se le credenziali non sono valide
+                } else {
+                 System.out.println("LOGGATO");
+                }
+            }
+        });
+
+        Button backButton = new Button("Scegli come accedere");
+        backButton.setId("backButton");
+        backButton.setOnAction( event -> {
+            // Avvia la finestra di login
+            LoginView loginView = new LoginView();
+            Stage loginStage = new Stage();
+            loginView.start(loginStage); // Avvia correttamente il metodo start chiamando la pagina di login
+            primaryStage.close(); // Ora chiudi la finestra principale solo dopo aver avviato la finestra di login
+
+        });
+
+        VBox vbox = new VBox(20, title, subtitle, errorText, emailField, passwordField, loginButton, backButton);
+        vbox.setId("vbox");
+        Scene scene = new Scene(vbox);
+        return scene;
     }
 
     public void showError() {
