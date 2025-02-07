@@ -1,6 +1,5 @@
 package homepage;
 
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,11 +14,9 @@ import model.Paziente;
 import prenotazione_visita.PrenotazioneVisitaView;
 import session_manager.SessionManagerPaziente;
 
+public class Home {
+    private Paziente pazienteLoggato = SessionManagerPaziente.getPazienteLoggato();
 
-public class Home extends Application {
-    Paziente gestore_sessione_pazienti = SessionManagerPaziente.getPazienteLoggato();
-
-    @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home - MindLab");
 
@@ -48,7 +45,7 @@ public class Home extends Application {
         header.getChildren().addAll(leftIcons, rightIcons);
 
         // Benvenuto
-        Text welcomeText = new Text("Ciao, nomePaziente !");
+        Text welcomeText = new Text("Ciao, " + pazienteLoggato.getNome() + "!");
         welcomeText.getStyleClass().add("welcome-text");
 
         // Bottoni principali
@@ -80,6 +77,7 @@ public class Home extends Application {
         // Creare la scena
         Scene scene = new Scene(container, 1200, 900); // Riduci dimensioni scena
         scene.getStylesheets().add(getClass().getResource("/style/style_home.css").toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
@@ -87,15 +85,14 @@ public class Home extends Application {
 
         // Comportamenti bottoni presenti
         prenotaButton.setOnAction(event -> {
-            PrenotazioneVisitaView prenotazoneView = new PrenotazioneVisitaView();
-            prenotazoneView.start(new Stage());
+            PrenotazioneVisitaView prenotazioneView = new PrenotazioneVisitaView();
+            prenotazioneView.start(new Stage());
             primaryStage.close();
         });
 
         shopButton.setOnAction(event -> {
-            Paziente paziente = SessionManagerPaziente.getPazienteLoggato();
-            System.out.println("Nome "+paziente.getNome());
-            System.out.println("Cognome "+paziente.getCognome());
+            System.out.println("Nome: " + pazienteLoggato.getNome());
+            System.out.println("Cognome: " + pazienteLoggato.getCognome());
         });
     }
 
@@ -109,10 +106,6 @@ public class Home extends Application {
         Button button = new Button();
         button.setGraphic(imageView);
         button.getStyleClass().add("hidden-button");
-        // Aggiungi l'azione desiderata per il pulsante qui
-        button.setOnAction(event -> {
-
-        });
 
         return button;
     }
@@ -132,7 +125,4 @@ public class Home extends Application {
         return link;
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

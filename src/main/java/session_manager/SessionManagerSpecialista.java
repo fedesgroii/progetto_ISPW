@@ -1,5 +1,5 @@
 package session_manager;
-
+import java.util.concurrent.atomic.AtomicReference;
 import model.Specialista;
 
 /**
@@ -7,8 +7,7 @@ import model.Specialista;
  * Tiene traccia dello specialista loggato in modo thread-safe.
  */
 public class SessionManagerSpecialista {
-
-    private static volatile SessionManagerSpecialista instance; // Istanza Singleton volatile
+    private static final AtomicReference<SessionManagerSpecialista> instance = new AtomicReference<>(); // Istanza Singleton thread-safe
     private volatile Specialista specialistaLoggato; // Specialista loggato (volatile per visibilità thread)
     private final Object lock = new Object(); // Lucchetto per sincronizzazione
 
@@ -19,14 +18,14 @@ public class SessionManagerSpecialista {
      * Restituisce l'unica istanza del SessionManager (Singleton thread-safe con double-checked locking).
      */
     public static SessionManagerSpecialista getInstance() {
-        if (instance == null) {
+        if (instance.get() == null) {
             synchronized (SessionManagerSpecialista.class) {
-                if (instance == null) {
-                    instance = new SessionManagerSpecialista();
+                if (instance.get() == null) {
+                    instance.set(new SessionManagerSpecialista());
                 }
             }
         }
-        return instance;
+        return instance.get();
     }
 
     /**

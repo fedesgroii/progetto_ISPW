@@ -15,7 +15,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import login.LoginView;
-import login_inserimento_dati.LoginViewBase;
 import java.util.Objects;
 
 public class StartupSettingsBoundary extends Application {

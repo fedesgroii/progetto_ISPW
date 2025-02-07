@@ -110,12 +110,9 @@ public abstract class LoginViewBase {
     }
 
     private void handleSuccessfulLogin() {
-        LOGGER.log(Level.INFO, "Login effettuato con successo per l'utente: {0}", emailField.getText());
+        LOGGER.log(Level.INFO,
+                "Login effettuato con successo per l''utente: {0}", emailField.getText());
         // DA IMPLEMENTARE: logica post-login
-
-        /**
-         * RICHIAMO PAGINA HOME PAGE
-         */
     }
 
     public void showError() {

@@ -1,5 +1,4 @@
 package storage_db;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -20,13 +19,12 @@ public class DatabaseConnection {
             if (input == null) {
                 throw new IOException("File dbconfig.properties non trovato nel classpath.");
             }
-
             Properties properties = new Properties();
             properties.load(input);
             url = properties.getProperty("db.url");
             user = properties.getProperty("db.user");
             password = properties.getProperty("db.password");
-            logger.info("Configurazione database caricata: url=" + url + ", user=" + user);
+            logger.info(String.format("Configurazione database caricata: url=%s, user=%s", url, user));
         } catch (IOException e) {
             logger.severe("Impossibile caricare il file di configurazione: dbconfig.properties");
             throw new ConfigurationLoadException("Impossibile caricare il file di configurazione: dbconfig.properties", e);

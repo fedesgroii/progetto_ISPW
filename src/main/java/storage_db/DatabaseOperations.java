@@ -1,5 +1,4 @@
 package storage_db;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +16,9 @@ import java.util.logging.Logger;
 public class DatabaseOperations {
     private static final Logger logger = Logger.getLogger(DatabaseOperations.class.getName());
 
+    // Costruttore privato per impedire la creazione di istanze della classe
+    private DatabaseOperations() {}
+
     /**
      * Esegue una query SQL di selezione e restituisce i risultati formattati.
      *
@@ -27,16 +29,12 @@ public class DatabaseOperations {
      */
     public static List<Map<String, Object>> executeQuery(String sql, Object... params) throws DatabaseException {
         List<Map<String, Object>> results = new ArrayList<>();
-
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             setParameters(stmt, params);
-
             try (ResultSet rs = stmt.executeQuery()) {
                 ResultSetMetaData metaData = rs.getMetaData();
                 int columnCount = metaData.getColumnCount();
-
                 while (rs.next()) {
                     Map<String, Object> row = new HashMap<>();
                     for (int i = 1; i <= columnCount; i++) {
@@ -64,10 +62,8 @@ public class DatabaseOperations {
     public static int executeUpdate(String sql, Object... params) throws DatabaseException {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             setParameters(stmt, params);
             return stmt.executeUpdate();
-
         } catch (SQLException e) {
             String errorMsg = "Errore esecuzione update: " + sql;
             logger.log(Level.SEVERE, errorMsg, e);
@@ -99,11 +95,9 @@ public class DatabaseOperations {
         try {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
-
             for (Runnable op : operations) {
                 op.run();
             }
-
             conn.commit();
         } catch (SQLException e) {
             try {

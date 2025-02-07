@@ -1,5 +1,4 @@
 package storage_db;
-
 import model.Paziente;
 import java.sql.*;
 import java.util.*;
@@ -8,40 +7,35 @@ import java.util.logging.Logger;
 
 public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Paziente> {
     private static final Logger logger = Logger.getLogger(DatabaseStorageStrategyPaziente.class.getName());
-
     // Query SQL con nomi di colonne corretti
     private static final String INSERT_QUERY = "INSERT INTO pazienti (nome, cognome, dataDiNascita, numeroTelefonico, email, numeroTesseraSanitaria, condizioniMediche, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_QUERY = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti WHERE numeroTesseraSanitaria=?";
     private static final String UPDATE_QUERY = "UPDATE pazienti SET nome = ?, cognome = ?, dataDiNascita = ?, numeroTelefonico = ?, email = ?, condizioniMediche = ?, password = ? WHERE numeroTesseraSanitaria = ?";
     private static final String DELETE_QUERY = "DELETE FROM pazienti WHERE numeroTesseraSanitaria = ?";
     private static final String SELECT_ALL_QUERY = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti";
+    // Definisci una costante per la stringa "Paziente non può essere null"
+    private static final String PAZIENTE_NOT_NULL_MESSAGE = "Paziente non può essere null";
 
     @Override
     public boolean salva(Paziente paziente) {
-        Objects.requireNonNull(paziente, "Paziente non può essere null");
-
+        Objects.requireNonNull(paziente, PAZIENTE_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
-
             conn.setAutoCommit(true); // ✅ Abilita il commit automatico
-
             setPazienteParameters(stmt, paziente, false);
-
             // ✅ Log dei dati prima dell'inserimento
             logger.info("Tentativo di inserimento paziente: " + paziente);
-
             return stmt.executeUpdate() > 0; // ✅ Controlla se almeno una riga è stata inserita
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Errore durante l'inserimento del paziente: " + paziente.getCodiceFiscalePaziente() +
                     ". Dettaglio: " + e.getMessage(), e);
             return false;
         }
-
     }
 
     @Override
     public Optional<Paziente> trova(Paziente paziente) {
-        Objects.requireNonNull(paziente, "Paziente non può essere null");
+        Objects.requireNonNull(paziente, PAZIENTE_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_QUERY)) {
             stmt.setString(1, paziente.getCodiceFiscalePaziente());
@@ -58,7 +52,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
 
     @Override
     public boolean aggiorna(Paziente paziente) {
-        Objects.requireNonNull(paziente, "Paziente non può essere null");
+        Objects.requireNonNull(paziente, PAZIENTE_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY)) {
             setPazienteParameters(stmt, paziente, true);
@@ -71,7 +65,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
 
     @Override
     public boolean elimina(Paziente paziente) {
-        Objects.requireNonNull(paziente, "Paziente non può essere null");
+        Objects.requireNonNull(paziente, PAZIENTE_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY)) {
             stmt.setString(1, paziente.getCodiceFiscalePaziente());

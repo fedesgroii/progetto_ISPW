@@ -10,12 +10,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.util.List;
 
 public class SpecialistDashboardView {
     private final Stage primaryStage;
     private final SpecialistDashboardControllerApp controller;
-
     private Button[] mainButtons;
     private BorderPane layout;
 
@@ -32,7 +32,7 @@ public class SpecialistDashboardView {
     }
 
     private void createUIComponents() {
-        mainButtons = new Button[] {
+        mainButtons = new Button[]{
                 createButton("Visualizza Dati Pazienti"),
                 createButton("Visualizza Visite della Settimana"),
                 createButton("Visualizza Tutte le Visite"),
@@ -48,15 +48,14 @@ public class SpecialistDashboardView {
     }
 
     private Button createButton(String text) {
-        Button btn = new Button(text);
-        btn.getStyleClass().add("button");
-        return btn;
+        Button button = new Button(text);
+        button.getStyleClass().add("button");
+        return button;
     }
 
     private HBox createHeader() {
         Text headerText = new Text("Interfaccia Specialista");
         headerText.getStyleClass().add("header-text");
-
         HBox header = new HBox(headerText);
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
@@ -85,11 +84,11 @@ public class SpecialistDashboardView {
     }
 
     private HBox createFooter() {
-        Button btnLogout = createButton("Log Out");
-        btnLogout.getStyleClass().add("logout-button");
-        btnLogout.setOnAction(e -> controller.handleLogout());
+        Button logoutButton = createButton("Log Out");
+        logoutButton.getStyleClass().add("logout-button");
+        logoutButton.setOnAction(event -> controller.handleLogout());
 
-        HBox footer = new HBox(btnLogout);
+        HBox footer = new HBox(logoutButton);
         footer.setAlignment(Pos.CENTER);
         footer.setPadding(new Insets(20));
         footer.getStyleClass().add("footer");
@@ -97,10 +96,10 @@ public class SpecialistDashboardView {
     }
 
     private void setupEventHandlers() {
-        mainButtons[0].setOnAction(e -> controller.handlePatientDataQuery());
-        mainButtons[1].setOnAction(e -> controller.handleWeeklyVisits());
-        mainButtons[2].setOnAction(e -> controller.handleAllVisits());
-        mainButtons[3].setOnAction(e -> controller.handleNewVisit());
+        mainButtons[0].setOnAction(event -> controller.handlePatientDataQuery());
+        mainButtons[1].setOnAction(event -> controller.handleWeeklyVisits());
+        mainButtons[2].setOnAction(event -> controller.handleAllVisits());
+        mainButtons[3].setOnAction(event -> controller.handleNewVisit());
     }
 
     public void showDynamicView(String title, String description, List<String> content) {
@@ -109,7 +108,7 @@ public class SpecialistDashboardView {
                 title,
                 description,
                 content,
-                () -> primaryStage.show()
+                primaryStage::show
         );
         primaryStage.hide();
     }

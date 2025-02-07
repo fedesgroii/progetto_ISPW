@@ -1,7 +1,5 @@
 package model;
 
-import prenotazione_visita.PrenotazioneVisitaBean;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 

@@ -1,6 +1,5 @@
 package prenotazione_visita;
 
-import model.Paziente;
 import model.Visita;
 import session_manager.SessionManagerPaziente;
 

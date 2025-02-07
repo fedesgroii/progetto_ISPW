@@ -24,7 +24,11 @@ public class LoginAppController {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
     private final LoginGraphicController controlloreGrafico;
     private final LoginViewBase view;
-    SessionManagerSpecialista gestore_sessione_specialista = SessionManagerSpecialista.getInstance();
+    private final SessionManagerSpecialista gestoreSessioneSpecialista = SessionManagerSpecialista.getInstance();
+
+    // Definizione delle costanti per "Patient" e "Specialist"
+    private static final String PATIENT_TYPE = "Patient";
+    private static final String SPECIALIST_TYPE = "Specialist";
 
     public LoginAppController(LoginViewBase view) {
         this.view = view;
@@ -34,7 +38,6 @@ public class LoginAppController {
     public boolean checkCredentials(String userType, String username, String password) {
         boolean risultato = false;
         int storageOption = config.getStorageOption();
-
         switch (storageOption) {
             case 0: // Salvataggio in memoria RAM (Liste)
                 risultato = checkListPointCredentials(userType, username, password);
@@ -46,67 +49,78 @@ public class LoginAppController {
                 risultato = checkFileStorageCredentials(userType, username, password);
                 break;
             default:
-                logger.log(Level.SEVERE, "Opzione di salvataggio non valida: " + storageOption);
+                String errorMessage = String.format("Opzione di salvataggio non valida: %d", storageOption);
+                logger.log(Level.SEVERE, errorMessage);
                 break;
         }
-
         return risultato;
     }
 
     public boolean checkDatabaseCredentials(String userType, String email, String password) {
-        if (!"Patient".equalsIgnoreCase(userType) && !"Specialist".equalsIgnoreCase(userType)) {
-            logger.log(Level.SEVERE, "Tipo di utente non valido: " + userType);
+        if (!PATIENT_TYPE.equalsIgnoreCase(userType) && !SPECIALIST_TYPE.equalsIgnoreCase(userType)) {
+            String errorMessage = String.format("Tipo di utente non valido: %s", userType);
+            logger.log(Level.SEVERE, errorMessage);
             return false;
         }
-
-        String tableName = userType.equalsIgnoreCase("Patient") ? "pazienti" : "specialista";
-        String SELECT_QUERY = "SELECT email, password FROM " + tableName + " WHERE email = ? AND password = ?";
-
+        String tableName = userType.equalsIgnoreCase(PATIENT_TYPE) ? "pazienti" : "specialista";
+        String selectQuery = "SELECT email, password FROM " + tableName + " WHERE email = ? AND password = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(SELECT_QUERY)) {
-
+             PreparedStatement stmt = conn.prepareStatement(selectQuery)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
-
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
             }
-
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante la verifica delle credenziali per " + userType, e);
+            logger.log(Level.SEVERE, () -> String.format("Errore durante la verifica delle credenziali per %s", userType));
         }
-
         return false;
     }
 
     private boolean checkListPointCredentials(String userType, String username, String password) {
-        if (userType.equalsIgnoreCase("Patient") || userType.equalsIgnoreCase("Paziente")) {
-            ListaPazienti listaPazienti = ListaPazienti.getIstanzaListaPazienti();
-            for (Paziente paziente : listaPazienti.getObservableListaPazienti()) {
-                if (paziente.getEmail().equalsIgnoreCase(username) && paziente.getPassword().equals(password)) {
-                    SessionManagerPaziente.setPazienteLoggato(paziente);
-                    return true;
-                }
+        if (isPatientType(userType)) {
+            return checkPatientCredentials(username, password);
+        } else if (isSpecialistType(userType)) {
+            return checkSpecialistCredentials(username, password);
+        }
+        return false;
+    }
+
+    private boolean isPatientType(String userType) {
+        return userType.equalsIgnoreCase(PATIENT_TYPE) || userType.equalsIgnoreCase("Paziente");
+    }
+
+    private boolean isSpecialistType(String userType) {
+        return userType.equalsIgnoreCase(SPECIALIST_TYPE) || userType.equalsIgnoreCase("Specialista");
+    }
+
+    private boolean checkPatientCredentials(String username, String password) {
+        ListaPazienti listaPazienti = ListaPazienti.getIstanzaListaPazienti();
+        for (Paziente paziente : listaPazienti.getObservableListaPazienti()) {
+            if (paziente.getEmail().equalsIgnoreCase(username) && paziente.getPassword().equals(password)) {
+                SessionManagerPaziente.setPazienteLoggato(paziente);
+                return true;
             }
         }
+        return false;
+    }
 
-        if (userType.equalsIgnoreCase("Specialista") || userType.equalsIgnoreCase("Specialist")) {
-            ListaSpecialisti listaSpecialisti = ListaSpecialisti.getIstanzaListaSpecialisti();
-            for (Specialista specialista : listaSpecialisti.getObservableListaSpecialisti()) {
-                if (specialista.getEmail().equalsIgnoreCase(username) && specialista.getPassword().equals(password)) {
-                    gestore_sessione_specialista.setSpecialistaLoggato(specialista);
-                    return true;
-                }
+    private boolean checkSpecialistCredentials(String username, String password) {
+        ListaSpecialisti listaSpecialisti = ListaSpecialisti.getIstanzaListaSpecialisti();
+        for (Specialista specialista : listaSpecialisti.getObservableListaSpecialisti()) {
+            if (specialista.getEmail().equalsIgnoreCase(username) && specialista.getPassword().equals(password)) {
+                gestoreSessioneSpecialista.setSpecialistaLoggato(specialista);
+                return true;
             }
         }
         return false;
     }
 
     private boolean checkFileStorageCredentials(String userType, String username, String password) {
-        if (userType.equalsIgnoreCase("Patient") || userType.equalsIgnoreCase("Paziente")) {
+        if (userType.equalsIgnoreCase(PATIENT_TYPE) || userType.equalsIgnoreCase("Paziente")) {
             FileManagerPazienti fileManager = new FileManagerPazienti();
             return verifyPatientCredentials(fileManager, username, password);
-        } else if (userType.equalsIgnoreCase("Specialist") || userType.equalsIgnoreCase("Specialista")) {
+        } else if (userType.equalsIgnoreCase(SPECIALIST_TYPE) || userType.equalsIgnoreCase("Specialista")) {
             FileManagerSpecialisti fileManager = new FileManagerSpecialisti();
             return verifySpecialistCredentials(fileManager, username, password);
         }
@@ -134,7 +148,7 @@ public class LoginAppController {
         List<Specialista> listaSpecialisti = fileManager.trovaTutti();
         for (Specialista specialista : listaSpecialisti) {
             if (specialista.getEmail().equalsIgnoreCase(username) && specialista.getPassword().equals(password)) {
-                gestore_sessione_specialista.setSpecialistaLoggato(specialista);
+                gestoreSessioneSpecialista.setSpecialistaLoggato(specialista);
                 return true;
             }
         }
