@@ -1,6 +1,5 @@
 package work_in_progress;
 
-import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,18 +11,19 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class FunctionalityUnavailableView extends Application {
+public class FunctionalityUnavailableView {
 
-    // Attributo per salvare il riferimento allo stage precedente
+    private final Stage primaryStage;
     private final Stage previousStage;
+    private final FunctionalityUnavailableController controller;
 
-    // Costruttore che accetta lo stage precedente
-    public FunctionalityUnavailableView(Stage previousStage) {
+    public FunctionalityUnavailableView(Stage primaryStage, Stage previousStage, FunctionalityUnavailableController controller) {
+        this.primaryStage = primaryStage;
         this.previousStage = previousStage;
+        this.controller = controller;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
+    public void start() {
         // Layout principale
         VBox root = new VBox();
         root.setId("root");
@@ -45,13 +45,7 @@ public class FunctionalityUnavailableView extends Application {
         // Bottone per tornare indietro
         Button backButton = new Button("Torna alla pagina principale");
         backButton.setId("backButton");
-        backButton.setOnAction(e -> {
-            // Riapre lo stage precedente
-            if (previousStage != null) {
-                previousStage.show(); // Mostra la finestra precedente
-            }
-            primaryStage.close(); // Chiude la finestra corrente
-        });
+        backButton.setOnAction(e -> controller.handleBackButton());
 
         // Aggiunta degli elementi al layout
         root.getChildren().addAll(icon, message, description, backButton);
@@ -67,9 +61,5 @@ public class FunctionalityUnavailableView extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
         primaryStage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

@@ -2,16 +2,16 @@ package registrazione;
 
 import storage_db.DatabaseConnection;
 import storage_db.DatabaseStorageStrategyPaziente;  // Importa la strategia di salvataggio su database per i pazienti
+import storage_file.FileManagerPazienti;  // Importa la classe per il salvataggio su file system
 import storage_liste.ListaPazienti;
 import startupconfig.StartupSettingsEntity;  // Importa la classe per gestire le configurazioni iniziali
 import model.Paziente;  // Importa la classe Paziente
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class RegistrazionePazienteControllerApplicativo {
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();  // Ottiene l'istanza della configurazione globale
-    private RegistrazionePazienteView view;  // Dichiarazione della vista per la registrazione del paziente
+    private final RegistrazionePazienteView view;  // Dichiarazione della vista per la registrazione del paziente
     private final DatabaseStorageStrategyPaziente pazienteDatabase = new DatabaseStorageStrategyPaziente();  // Crea un'istanza per il salvataggio su database
     private final RegistrazionePazienteControllerGrafico controlloreGrafico;
 
@@ -39,24 +39,38 @@ public class RegistrazionePazienteControllerApplicativo {
                 return false; // Restituisce false se la creazione del paziente non è riuscita
             }
 
-            if (config.isSaveToDatabase()) {
-                if (isDuplicateInDatabase(paziente)) {
-                    view.showGenericError("Questi dati risultano già registrati nel DataBase"); // Mostra un messaggio di errore per duplicati
-                    return false;
-                }
-                view.hideGenericError();
-                return pazienteDatabase.salva(paziente);
-            } else {
-                ListaPazienti pazienteLista = ListaPazienti.getIstanzaListaPazienti();
-                if (isDuplicateInList(paziente, pazienteLista)) {
-                    view.showGenericError("Questi dati risultano già registrati nella lista utenti"); // Mostra un messaggio di errore per duplicati
-                    return false;
-                }
-                view.hideGenericError();
-                pazienteLista.aggiungiPaziente(paziente);
-                return true;
+            int storageOption = config.getStorageOption(); // Ottiene l'opzione di salvataggio
+            switch (storageOption) {
+                case 1: // Salvataggio su Database
+                    if (isDuplicateInDatabase(paziente)) {
+                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                        return false;
+                    }
+                    view.hideGenericError();
+                    return pazienteDatabase.salva(paziente);
+
+                case 2: // Salvataggio su File System
+                    FileManagerPazienti fileManager = new FileManagerPazienti(); // Gestione file system
+                    if (FileManagerPazienti.trovaCodiceFiscaleNellaCartellaPazienti(paziente.getCodiceFiscalePaziente())) {
+                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                        return false;
+                    }
+                    view.hideGenericError();
+                    return fileManager.salva(paziente);
+
+                default: // Salvataggio in Lista (RAM)
+                    ListaPazienti pazienteLista = ListaPazienti.getIstanzaListaPazienti();
+                    if (isDuplicateInList(paziente, pazienteLista)) {
+                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                        return false;
+                    }
+                    view.hideGenericError();
+                    pazienteLista.aggiungiPaziente(paziente);
+                    return true;
             }
         }
+
+        view.showGenericError("Errore nell'inserimento dei dati.");
         return false; // Restituisce false se c'è stato un errore
     }
 
@@ -66,7 +80,6 @@ public class RegistrazionePazienteControllerApplicativo {
                     view.dataDiNascitaField.getText(),
                     java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")
             );
-
             return new Paziente.Builder()
                     .nome(view.nomeField.getText())
                     .cognome(view.cognomeField.getText())
@@ -83,23 +96,24 @@ public class RegistrazionePazienteControllerApplicativo {
         }
     }
 
-
     private boolean isDuplicateInDatabase(Paziente paziente) {
-        // Controlla duplicati in base a email, numero di telefono o codice fiscale
-        String query = "SELECT COUNT(*) FROM paziente WHERE email = ? OR numero_telefonico = ? OR codice_fiscale = ?";
-        try (var conn = DatabaseConnection.getConnection();
-             var stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, paziente.getEmail());
-            stmt.setString(2, paziente.getNumeroTelefonico());
-            stmt.setString(3, paziente.getCodiceFiscalePaziente());
-
-            try (var rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0; // Restituisce true se ci sono duplicati
+        String query = "SELECT 1 FROM pazienti WHERE email = ? OR numeroTelefonico = ? OR numeroTesseraSanitaria = ? LIMIT 1";
+        try (var conn = DatabaseConnection.getConnection()) {
+            if (conn == null) {
+                view.showGenericError("Errore: Connessione al database nulla.");
+                return false;
+            }
+            try (var stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, paziente.getEmail() != null ? paziente.getEmail() : "");
+                stmt.setString(2, paziente.getNumeroTelefonico() != null ? paziente.getNumeroTelefonico() : "");
+                stmt.setString(3, paziente.getCodiceFiscalePaziente() != null ? paziente.getCodiceFiscalePaziente() : "");
+                try (var rs = stmt.executeQuery()) {
+                    return rs.next(); // Se trova almeno un risultato, c'è un duplicato
                 }
             }
         } catch (Exception e) {
-            view.showGenericError("Errore di connessione al DataBase"); // Mostra un messaggio di errore per duplicati
+            view.showGenericError("Errore di connessione al Database");
+            e.printStackTrace(); // Stampa l'errore reale in console
         }
         return false;
     }
@@ -115,5 +129,4 @@ public class RegistrazionePazienteControllerApplicativo {
         }
         return false;
     }
-
 }

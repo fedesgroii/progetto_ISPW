@@ -13,8 +13,10 @@ import login_inserimento_dati.LoginViewPatient;
 import login_inserimento_dati.LoginViewSpecialist;
 import registrazione.RegistrazionePazienteView;
 import startupconfig.StartupSettingsEntity;
+import java.util.logging.Logger;
 
 public class LoginView {
+    private static final Logger logger = Logger.getLogger(LoginView.class.getName());
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
     private static final String SUBTITLE = "subtitle";
 
@@ -79,47 +81,55 @@ public class LoginView {
         // Scena
         Scene scene = new Scene(root, 800, 600);
 
-        // Controller setup
-        LoginController controller = new LoginController();
+
 
         // Aggiungi eventi personalizzati
         specialistButton.setOnAction(event -> {
-            controller.handleSpecialistLogin();
+            logger.info("Pulsante Specialista premuto.");
+            logger.info("Login Specialista gestito.");
             LoginViewSpecialist specialistView = new LoginViewSpecialist();
             specialistView.start(new Stage());
             primaryStage.close();
+            logger.info("Pagina specialista aperta, finestra di login chiusa.");
         });
 
         patientButton.setOnAction(event -> {
-            controller.handlePatientLogin();
+            logger.info("Pulsante Paziente premuto.");
+            logger.info("Login Paziente gestito.");
             LoginViewPatient patientView = new LoginViewPatient();
             patientView.start(new Stage());
             primaryStage.close();
+            logger.info("Pagina paziente aperta, finestra di login chiusa.");
         });
 
         registerButton.setOnAction(event -> {
-        RegistrazionePazienteView regView = new RegistrazionePazienteView();
+            logger.info("Pulsante Registrati premuto.");
+            RegistrazionePazienteView regView = new RegistrazionePazienteView();
             regView.start(new Stage());
             primaryStage.close();
+            logger.info("Pagina registrazione aperta, finestra di login chiusa.");
         });
 
-
         appointmentButton.setOnAction(event -> {
-            controller.handleAppointmentWithoutLogin();
+            logger.info("Pulsante Prenota un appuntamento senza registrarti premuto.");
+            logger.info("Prenotazione senza login gestita.");
         });
 
         // Carica il file CSS
         if (config.isColorMode()) {
             String colorStyle = getClass().getResource("/style/style_login_a_colori.css").toExternalForm();
             scene.getStylesheets().add(colorStyle);
+            logger.info("Stile a colori caricato.");
         } else {
             String bnStyle = getClass().getResource("/style/style_login_bn.css").toExternalForm();
             scene.getStylesheets().add(bnStyle);
+            logger.info("Stile in bianco e nero caricato.");
         }
 
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
         primaryStage.setResizable(false);
         primaryStage.show();
+        logger.info("Finestra di login mostrata.");
     }
 }

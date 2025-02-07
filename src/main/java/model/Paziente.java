@@ -6,6 +6,7 @@ public class Paziente extends Persona {
     private String codiceFiscalePaziente;
     private String condizioniMediche;
 
+
     // Costruttore privato
     private Paziente(Builder builder) {
         super(builder.nome, builder.cognome, LocalDate.parse(builder.dataDiNascita), builder.numeroTelefonico, builder.email, builder.password);

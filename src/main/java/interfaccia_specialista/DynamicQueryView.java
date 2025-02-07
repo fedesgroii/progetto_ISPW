@@ -10,82 +10,70 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.List;
 
 public class DynamicQueryView {
 
-    // Costruttore privato per impedire l'instanziazione
+    // Il costruttore è privato per impedire l'istanza della classe, poiché è una classe di utilità
     private DynamicQueryView() {
-        throw new UnsupportedOperationException("Questa è una classe utility e non può essere istanziata.");
+        throw new UnsupportedOperationException("Classe di utilità, non istanziabile");
     }
 
     /**
-     * Mostra una vista dinamica con il risultato della query.
+     * Metodo statico per visualizzare una finestra con i risultati di una query dinamica.
      *
-     * @param stage     Il contenitore principale della finestra.
-     * @param titolo    Il titolo della finestra e dell'header.
-     * @param messaggio Il messaggio descrittivo che introduce i risultati.
-     * @param risultati La lista dei risultati ottenuti dalla query.
-     * @param onBack    L'azione da eseguire al clic del pulsante "Torna Indietro".
+     * @param stage     Lo stage in cui verrà mostrata la finestra.
+     * @param titolo    Il titolo della finestra.
+     * @param messaggio Un messaggio descrittivo per l'utente.
+     * @param risultati Una lista di stringhe contenenti i risultati della query.
+     * @param onBack    Una funzione da eseguire quando l'utente preme il pulsante "Torna Indietro".
      */
     public static void show(Stage stage, String titolo, String messaggio, List<String> risultati, Runnable onBack) {
-        // Header
+
+        // Creazione dell'header con il titolo
         Text headerText = new Text(titolo);
-        headerText.getStyleClass().add("header-text");
-
         HBox header = new HBox(headerText);
-        header.setAlignment(Pos.CENTER);
-        header.setPadding(new Insets(20));
-        header.setId("header");
+        header.setAlignment(Pos.CENTER);  // Centra il titolo orizzontalmente
+        header.setPadding(new Insets(20)); // Imposta un padding di 20px intorno all'header
 
-        // Messaggio descrittivo
+        // Creazione della descrizione del messaggio per l'utente
         Label description = new Label(messaggio);
-        description.getStyleClass().add("description-label");
 
-        // Area centrale per mostrare i risultati
-        VBox resultContainer = new VBox(10);
-        resultContainer.setAlignment(Pos.CENTER);
-        resultContainer.setPadding(new Insets(20));
-        resultContainer.setId("result-container");
-
+        // Contenitore per i risultati della query
+        VBox resultContainer = new VBox(10); // Spazio di 10px tra gli elementi della VBox
         if (risultati.isEmpty()) {
+            // Se non ci sono risultati, mostra un messaggio di avviso
             resultContainer.getChildren().add(new Label("Nessun risultato trovato."));
         } else {
-            for (String riga : risultati) {
-                resultContainer.getChildren().add(new Label(riga));
-            }
+            // Altrimenti, aggiunge ogni risultato come una nuova Label nella VBox
+            risultati.forEach(riga -> resultContainer.getChildren().add(new Label(riga)));
         }
 
-        // Footer con il pulsante per tornare all'interfaccia precedente
+        // Creazione del pulsante per tornare indietro
         Button btnBack = new Button("Torna Indietro");
-        btnBack.setId("backButton");
         btnBack.setOnAction(e -> {
-            if (onBack != null) {
-                onBack.run();
-            }
-            stage.close();
+            onBack.run(); // Esegue il metodo di callback passato come parametro
+            stage.close(); // Chiude la finestra attuale
         });
 
+        // Footer che contiene il pulsante "Torna Indietro"
         HBox footer = new HBox(btnBack);
-        footer.setAlignment(Pos.CENTER);
-        footer.setPadding(new Insets(20));
-        footer.setId("footer");
+        footer.setAlignment(Pos.CENTER);  // Centra il pulsante
+        footer.setPadding(new Insets(20)); // Aggiunge un padding di 20px
 
-        // Layout principale
+        // Layout principale con BorderPane:
+        // - header in alto
+        // - descrizione e risultati al centro
+        // - footer con il pulsante in basso
         BorderPane layout = new BorderPane();
         layout.setTop(header);
-        layout.setCenter(new VBox(20, description, resultContainer));
+        layout.setCenter(new VBox(20, description, resultContainer)); // VBox con spaziatura tra descrizione e risultati
         layout.setBottom(footer);
-        layout.setId("main-container");
 
-        // Scena
+        // Creazione della scena e impostazione nello stage
         Scene scene = new Scene(layout, 800, 600);
-        scene.getStylesheets().add(DynamicQueryView.class.getResource("/style/style_query_result.css").toExternalForm());
-
-        stage.setTitle(titolo);
         stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        stage.setTitle(titolo); // Imposta il titolo della finestra
+        stage.show(); // Mostra la finestra all'utente
     }
 }

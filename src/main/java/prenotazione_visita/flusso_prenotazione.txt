@@ -1,0 +1,167 @@
+Come funziona il flusso
+La Vista (PrenotazioneVisitaView):
+Crea il PrenotazioneVisitaBean con i dati inseriti dall'utente.
+Passa il Bean al PrenotazioneVisitaController chiamando il metodo handlePrenotazioneClick.
+Il Controller della Vista (PrenotazioneVisitaController):
+Riceve il Bean.
+Lo passa al PrenotazioneVisitaApplicationController per la validazione.
+Il Controllore Applicativo (PrenotazioneVisitaApplicationController):
+Verifica che i dati siano validi.
+Gestisce eventuali errori (solleva eccezioni in caso di dati non validi).
+Se i dati sono validi, procede con l'operazione (es. salvataggio).
+
+
+Il GridPane è un layout manager di JavaFX che consente di organizzare i componenti
+ della GUI in una griglia con righe e colonne.
+ È particolarmente utile quando si vuole disporre i controlli
+ (ad esempio pulsanti, etichette, campi di testo)
+ in una struttura tabellare, dove ogni cella della griglia può contenere
+ un componente.
+
+A cosa serve GridPane?
+Serve per creare interfacce utente con una disposizione ordinata e
+ben definita, in cui gli elementi sono allineati in base a righe e colonne.
+Ad esempio, è spesso usato per moduli di input o layout che richiedono un
+posizionamento preciso.
+
+Nel contesto del tuo progetto, il GridPane è utilizzato per
+disporre gli elementi del modulo di prenotazione come campi di input,
+etichette e combinazioni di scelta.
+
+
+Motivo: Il controller potrebbe aver bisogno di accedere al GridPane per:
+
+Recuperare valori inseriti nei campi di input.
+Aggiornare dinamicamente i componenti dell'interfaccia
+(ad esempio, aggiungere messaggi di errore o conferme).
+Effettuare operazioni sulla struttura del layout
+(abilitare/disabilitare campi, modificare contenuti, ecc.).
+Quando è utile passare il GridPane al controller?
+È utile quando il controller deve:
+
+Interagire direttamente con l'interfaccia utente:
+Per esempio, controllare se tutti i campi del modulo sono stati compilati.
+Aggiornare dinamicamente l'interfaccia: Ad esempio,
+mostrare un messaggio di errore accanto a un campo obbligatorio.
+Se il controller non ha bisogno di accedere al layout della griglia,
+il GridPane non deve essere passato come parametro.
+
+Conclusione
+Il GridPane è un layout manager molto versatile per creare moduli e
+interfacce ordinate. Nel tuo progetto, viene passato al controller
+affinché quest'ultimo possa gestire o aggiornare dinamicamente
+i controlli presenti nel layout, in base alla logica applicativa.
+Se non è strettamente necessario al controller, puoi evitare di passarlo
+come parametro.
+
+
+
+
+
+
+
+
+
+
+check
+
+
+package prenotazione_visita;
+
+import javafx.scene.layout.GridPane;
+import model.Paziente;
+import model.Visita;
+import startupconfig.StartupSettingsEntity;
+import storage_db.DatabaseStorageStrategyPaziente;
+import storage_db.DatabaseStorageStrategyVisita;
+import storage_liste.ListaVisite;
+import storage_db.exception.DatabaseStorageException;
+
+public class PrenotazioneVisitaControllerApp {
+
+    private final PrenotazioneVisitaView view;
+    private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
+    private final DatabaseStorageStrategyPaziente pazienteDatabase = new DatabaseStorageStrategyPaziente();
+    private final DatabaseStorageStrategyVisita visitaDatabase = new DatabaseStorageStrategyVisita();
+    private final ListaVisite listaVisite = ListaVisite.getIstanzaListaVisite();
+    private final PrenotazioneViewControllerGrafico controllerGraficoPrenotazione;
+
+    public PrenotazioneVisitaControllerApp(GridPane gridPane, PrenotazioneVisitaView view) {
+        this.view = view;
+        this.controllerGraficoPrenotazione = new PrenotazioneViewControllerGrafico(view);
+    }
+
+    public void salvaPrenotazione(PrenotazioneVisitaBean bean) {
+        isValidInputPrenotazione(bean);
+    }
+
+    protected void isValidInputPrenotazione(PrenotazioneVisitaBean bean) {
+        boolean result = validatePrenotazione(bean);
+
+        if (result) {
+            try {
+                Visita visita = convertBeanToVisita(bean);
+
+                if(config.isSaveToDatabase()) {
+                    salvaSuDatabase(visita);
+                } else {
+                    salvaSuLista(visita);
+                }
+
+                controllerGraficoPrenotazione.mostraConferma("Prenotazione salvata con successo!");
+
+            } catch (DatabaseStorageException e) {
+                controllerGraficoPrenotazione.mostraErrore("Errore durante il salvataggio: " + e.getMessage());
+            } catch (Exception e) {
+                controllerGraficoPrenotazione.mostraErrore("Errore generico: " + e.getMessage());
+            }
+        }
+    }
+
+    private Visita convertBeanToVisita(PrenotazioneVisitaBean bean) {
+        Paziente paziente = pazienteDatabase.trovaPerCodiceFiscale(bean.getCodiceFiscale())
+                .orElseThrow(() -> new DatabaseStorageException("Paziente non trovato"));
+
+        return new Visita(
+            paziente,
+            bean.getDataVisita(),
+            bean.getOrarioVisita(),
+            bean.getSpecialista(),
+            bean.getTipoVisita(),
+            bean.getMotivoVisita(),
+            "Prenotato"
+        );
+    }
+
+    private void salvaSuDatabase(Visita visita) {
+        if(!visitaDatabase.salva(visita)) {
+            throw new DatabaseStorageException("Salvataggio nel database fallito");
+        }
+    }
+
+    private void salvaSuLista(Visita visita) {
+        listaVisite.aggiungiVisita(visita);
+
+        // Verifica che sia effettivamente aggiunta
+        if(!listaVisite.getObservableListaVisite().contains(visita)) {
+            throw new DatabaseStorageException("Salvataggio nella lista fallito");
+        }
+    }
+
+    private boolean validatePrenotazione(PrenotazioneVisitaBean bean) {
+        boolean[] validations = {
+            controllerGraficoPrenotazione.isValidDataVisita(bean),
+            controllerGraficoPrenotazione.isValidOrarioVisita(bean),
+            controllerGraficoPrenotazione.isValidSpecialista(bean),
+            controllerGraficoPrenotazione.isValidTipoVisita(bean),
+            controllerGraficoPrenotazione.isValidMotivoVisita(bean)
+        };
+
+        for (boolean validation : validations) {
+            if (!validation) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

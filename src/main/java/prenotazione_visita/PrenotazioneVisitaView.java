@@ -7,19 +7,35 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PrenotazioneVisitaView extends Application {
-    String inputField = "inputField";
+    private DatePicker datePicker;
+    private ComboBox<LocalTime> timeComboBox;
+    private ComboBox<String> specialistComboBox;
+    private ComboBox<String> tipoVisitaComboBox;
+    private TextField motivoTextField;
+
+    // Variabili per i messaggi di errore
+    private Text errorTextDataVisita;
+    private Text errorTextOrarioVisita;
+    private Text errorTextSpecialista;
+    private Text errorTextTipoVisita;
+    private Text errorTextMotivoVisita;
+
+    private final String inputField = "inputField"; // ID comune assegnato agli input del form
+
     @Override
     public void start(Stage primaryStage) {
-        // Layout principale
-        VBox mainLayout = new VBox(20); // Spaziatura verticale
+        // Layout principale (VBox) con spaziatura verticale
+        VBox mainLayout = new VBox(20);
         mainLayout.setPadding(new Insets(20));
         mainLayout.setAlignment(Pos.CENTER);
 
@@ -27,128 +43,229 @@ public class PrenotazioneVisitaView extends Application {
         Label titleLabel = new Label("Prenotazione Visita");
         titleLabel.setId("title");
 
-        // Sottotitolo sopra il form
+        // Sottotitolo per il form
         Label subtitleLabel = new Label("Completa tutti i campi");
         subtitleLabel.setId("subtitle");
 
-        // Layout per il form
+        // Layout a griglia per organizzare il form
+        GridPane gridPane = createFormGridPane();
+
+        // Inizializza il controller con il layout della griglia
+        PrenotazioneVisitaControllerApp controller = new PrenotazioneVisitaControllerApp(gridPane, this);
+
+        // Bottone per confermare la prenotazione
+        Button submitButton = createSubmitButton(controller);
+
+        // Bottone per tornare indietro
+        Button backButton = createBackButton(primaryStage);
+
+        // Aggiunge gli elementi al layout principale
+        mainLayout.getChildren().addAll(titleLabel, subtitleLabel, gridPane, submitButton, backButton);
+
+        // Configura la scena e mostra la finestra
+        Scene scene = new Scene(mainLayout, 600, 500);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/style_prenotazione_visita_view_a_colori.css")).toExternalForm());
+        primaryStage.setTitle("Prenotazione Visita");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+        primaryStage.setFullScreen(true);
+        resetErrorMessages();
+        /**
+         * Aggiungi configurazione stile
+         */
+    }
+
+    private GridPane createFormGridPane() {
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(20));
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
 
-        // Etichetta e campo per la data della visita
-        Label dateLabel = new Label("Data della visita:");
+        // Elenco degli orari disponibili come LocalTime
+        /**
+         * Da rimuovere per integrare con DB
+         */
+        List<LocalTime> orariDisponibili = Arrays.asList(
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0),
+                LocalTime.of(11, 0),
+                LocalTime.of(14, 0),
+                LocalTime.of(15, 0),
+                LocalTime.of(16, 0)
+        );
+        // Creazione degli elementi del form
+        datePicker = createDatePicker();
+        timeComboBox = createTimeComboBox(orariDisponibili, datePicker);
+        specialistComboBox = createComboBox("Specialista", Arrays.asList("Dr. Rossi", "Dr.ssa Bianchi", "Dr. Verdi"));
+        tipoVisitaComboBox = createComboBox("Tipo di visita", Arrays.asList("Logopedica", "Psicologica"));
+        motivoTextField = createTextField("Motivo della visita");
+
+        // Creazione dei messaggi di errore per ogni campo
+        errorTextDataVisita = createErrorText("Errore nella selezione della data, correggi");
+        errorTextOrarioVisita = createErrorText("Errore nell'inserimento dell'orario, correggi");
+        errorTextSpecialista = createErrorText("Errore nella selezione dello specialista, correggi");
+        errorTextTipoVisita = createErrorText("Errore nella selezione del tipo di visita, correggi");
+        errorTextMotivoVisita = createErrorText("Errore nell'inserimento del motivo della visita, correggi");
+
+        // Aggiunta dei componenti al layout
+        gridPane.add(createFieldWithError(datePicker, "Data della visita:", errorTextDataVisita), 0, 0);
+        gridPane.add(createFieldWithError(timeComboBox, "Orario della visita:", errorTextOrarioVisita), 0, 1);
+        gridPane.add(createFieldWithError(specialistComboBox, "Specialista:", errorTextSpecialista), 0, 2);
+        gridPane.add(createFieldWithError(tipoVisitaComboBox, "Tipo di visita:", errorTextTipoVisita), 0, 3);
+        gridPane.add(createFieldWithError(motivoTextField, "Motivo della visita:", errorTextMotivoVisita), 0, 4);
+
+        return gridPane;
+    }
+
+    // Metodo per creare un gruppo di campo e messaggio di errore
+    private VBox createFieldWithError(Control field, String labelText, Text errorText) {
+        VBox vbox = new VBox(5);  // Spaziatura verticale tra il messaggio di errore e il campo
+        Label label = new Label(labelText);
+        vbox.getChildren().addAll(errorText, label, field);
+        return vbox;
+    }
+
+    private DatePicker createDatePicker() {
         DatePicker datePicker = new DatePicker();
         datePicker.setId(inputField);
-        gridPane.add(dateLabel, 0, 0);
-        gridPane.add(datePicker, 1, 0);
+        return datePicker;
+    }
 
-        // Etichetta e menu a discesa per l'orario della visita
-        Label timeLabel = new Label("Orario della visita:");
-        ComboBox<String> timeComboBox = new ComboBox<>();
+    private ComboBox<LocalTime> createTimeComboBox(List<LocalTime> orariDisponibili, DatePicker datePicker) {
+        ComboBox<LocalTime> timeComboBox = new ComboBox<>();
         timeComboBox.setPromptText("Seleziona un orario");
-        timeComboBox.setDisable(true); // Disabilitato inizialmente
+        timeComboBox.setDisable(true);
         timeComboBox.setId(inputField);
-        gridPane.add(timeLabel, 0, 1);
-        gridPane.add(timeComboBox, 1, 1);
 
-        // Popolamento degli orari disponibili (da aggiornare dinamicamente in base al database)
-        List<String> orariDisponibili = Arrays.asList("09:00", "10:00", "11:00", "14:00", "15:00", "16:00");
-
-        // Abilita la selezione dell'orario solo dopo aver selezionato una data
+        // Abilita la selezione dell'orario solo dopo aver scelto una data
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 timeComboBox.setDisable(false);
-                timeComboBox.getItems().clear();
-                timeComboBox.getItems().addAll(orariDisponibili);
+                timeComboBox.getItems().setAll(orariDisponibili);
             } else {
                 timeComboBox.setDisable(true);
                 timeComboBox.getItems().clear();
             }
         });
 
-        // Etichetta e menu a discesa per lo specialista
-        Label specialistLabel = new Label("Specialista:");
-        ComboBox<String> specialistComboBox = new ComboBox<>();
-        specialistComboBox.setPromptText("Seleziona uno specialista");
-        specialistComboBox.setId(inputField);
-        // Placeholder per gli specialisti (da popolare dinamicamente)
-        List<String> specialisti = Arrays.asList("Dr. Rossi", "Dr.ssa Bianchi", "Dr. Verdi");
-        specialistComboBox.getItems().addAll(specialisti);
-        gridPane.add(specialistLabel, 0, 2);
-        gridPane.add(specialistComboBox, 1, 2);
+        // Imposta il rendering per mostrare gli orari in formato leggibile
+        timeComboBox.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(LocalTime time) {
+                return (time != null) ? time.toString() : "";
+            }
 
-        // Etichetta e menu a discesa per il tipo di visita
-        Label tipoVisitaLabel = new Label("Tipo di visita:");
-        ComboBox<String> tipoVisitaComboBox = new ComboBox<>();
-        tipoVisitaComboBox.setPromptText("Seleziona il tipo di visita");
-        tipoVisitaComboBox.getItems().addAll("Logopedica", "Psicologica");
-        tipoVisitaComboBox.setId(inputField);
-        gridPane.add(tipoVisitaLabel, 0, 3);
-        gridPane.add(tipoVisitaComboBox, 1, 3);
-
-        // Etichetta e campo di testo per il motivo della visita
-        Label motivoLabel = new Label("Motivo della visita:");
-        TextField motivoTextField = new TextField();
-        motivoTextField.setId(inputField);
-        gridPane.add(motivoLabel, 0, 4);
-        gridPane.add(motivoTextField, 1, 4);
-
-        // Bottone per confermare la prenotazione
-        Button submitButton = new Button("Prenota");
-        submitButton.setId("specialistButton");
-        gridPane.add(submitButton, 1, 5);
-
-        // Bottone "Torna indietro"
-        Button backButton = new Button("Torna indietro");
-        backButton.setOnAction(event -> {
-
-            primaryStage.close(); // Chiudi la finestra corrente
-        });
-
-        // Azione sul click del bottone
-        submitButton.setOnAction(event -> {
-            LocalDate data = datePicker.getValue();
-            String orario = timeComboBox.getValue();
-            String specialista = specialistComboBox.getValue();
-            String tipoVisita = tipoVisitaComboBox.getValue();
-            String motivo = motivoTextField.getText();
-
-            if (data == null || orario == null || specialista == null || tipoVisita == null || motivo.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Errore");
-                alert.setHeaderText(null);
-                alert.setContentText("Tutti i campi devono essere compilati.");
-                alert.showAndWait();
-            } else {
-                LocalDateTime dataVisita = LocalDateTime.parse(data + "T" + orario + ":00");
-                System.out.println("Prenotazione confermata:\n" +
-                        "Data: " + dataVisita + "\n" +
-                        "Specialista: " + specialista + "\n" +
-                        "Tipo Visita: " + tipoVisita + "\n" +
-                        "Motivo: " + motivo);
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Conferma");
-                alert.setHeaderText(null);
-                alert.setContentText("Prenotazione effettuata con successo!");
-                alert.showAndWait();
+            @Override
+            public LocalTime fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalTime.parse(string) : null;
             }
         });
 
-        // Aggiunta degli elementi al layout principale
-        mainLayout.getChildren().addAll(titleLabel, subtitleLabel, gridPane, backButton);
+        return timeComboBox;
+    }
 
-        // Configurazione della scena e avvio
-        Scene scene = new Scene(mainLayout, 600, 500);
-        scene.getStylesheets().add(getClass().getResource("/style/style_prenotazione_visita_view_a_colori.css").toExternalForm());
-        primaryStage.setTitle("Prenotazione Visita");
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
-        primaryStage.setFullScreen(true);
-        primaryStage.show();
+    private ComboBox<String> createComboBox(String label, List<String> items) {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.setPromptText("Seleziona " + label);
+        comboBox.getItems().addAll(items);
+        comboBox.setId(inputField);
+        return comboBox;
+    }
+
+    private TextField createTextField(String label) {
+        TextField textField = new TextField();
+        textField.setId(inputField);
+        return textField;
+    }
+
+    // Crea il testo di errore
+    private Text createErrorText(String errorMessage) {
+        Text errorText = new Text(errorMessage);
+        errorText.setId("ERRORE");
+        errorText.setVisible(false);  // inizialmente invisibile
+        return errorText;
+    }
+
+    // Metodi per visualizzare o nascondere gli errori
+
+    public void showErrorDataVisita() {
+        errorTextDataVisita.setVisible(true);
+    }
+
+    public void hideErrorDataVisita() {
+        errorTextDataVisita.setVisible(false);
+    }
+
+    public void showErrorOrarioVisita() {
+        errorTextOrarioVisita.setVisible(true);
+    }
+
+    public void hideErrorOrarioVisita() {
+        errorTextOrarioVisita.setVisible(false);
+    }
+
+    public void showErrorSpecialista() {
+        errorTextSpecialista.setVisible(true);
+    }
+
+    public void hideErrorSpecialista() {
+        errorTextSpecialista.setVisible(false);
+    }
+
+    public void showErrorTipoVisita() {
+        errorTextTipoVisita.setVisible(true);
+    }
+
+    public void hideErrorTipoVisita() {
+        errorTextTipoVisita.setVisible(false);
+    }
+
+    public void showErrorMotivoVisita() {
+        errorTextMotivoVisita.setVisible(true);
+    }
+
+    public void hideErrorMotivoVisita() {
+        errorTextMotivoVisita.setVisible(false);
+    }
+
+    private void resetErrorMessages() {
+        hideErrorDataVisita();
+        hideErrorOrarioVisita();
+        hideErrorSpecialista();
+        hideErrorTipoVisita();
+        hideErrorMotivoVisita();
+    }
+
+
+    private Button createSubmitButton(PrenotazioneVisitaControllerApp controller) {
+        Button submitButton = new Button("Prenota");
+        submitButton.setId("specialistButton");
+
+        // Collega il bottone al metodo del controller
+        submitButton.setOnAction(event -> {
+            PrenotazioneVisitaBean bean = createPrenotazioneBean();
+            controller.isValidInputPrenotazione(bean); // Chiama il metodo del controller
+        });
+
+        return submitButton;
+    }
+
+    private Button createBackButton(Stage primaryStage) {
+        Button backButton = new Button("Torna indietro");
+        backButton.setOnAction(event -> primaryStage.close());
+        return backButton;
+    }
+
+    private PrenotazioneVisitaBean createPrenotazioneBean() {
+        PrenotazioneVisitaBean bean = new PrenotazioneVisitaBean();
+        bean.setDataVisita(datePicker.getValue());
+        bean.setOrarioVisita(timeComboBox.getValue());
+        bean.setSpecialista(specialistComboBox.getValue());
+        bean.setTipoVisita(tipoVisitaComboBox.getValue());
+        bean.setMotivoVisita(motivoTextField.getText());
+        return bean;
     }
 
     public static void main(String[] args) {

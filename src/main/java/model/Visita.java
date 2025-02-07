@@ -1,20 +1,25 @@
 package model;
 
-import java.time.LocalDateTime;
+import prenotazione_visita.PrenotazioneVisitaBean;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Visita {
     private Paziente paziente; // Il paziente che sta effettuando la visita
-    private LocalDateTime dataVisita; // La data e l'ora della visita
+    private LocalDate data;   // Solo la data
+    private LocalTime orario; // Solo l'ora
     private String specialista; // Lo specialista che effettua la visita (medico, terapista, etc.)
     private String tipoVisita; // Tipo di visita (logopedica, psicologica ecc..)
     private String motivoVisita; // Motivo della visita
     private String stato; // Stato della visita (prenotata, completata, annullata, etc.)
 
     // Costruttore
-    public Visita(Paziente paziente, LocalDateTime dataVisita, String specialista,
+    public Visita(Paziente paziente, LocalDate data, LocalTime orario, String specialista,
                   String tipoVisita, String motivoVisita, String stato) {
         this.paziente = paziente;
-        this.dataVisita = dataVisita;
+        this.data = data;
+        this.orario = orario;
         this.specialista = specialista;
         this.tipoVisita = tipoVisita;
         this.motivoVisita = motivoVisita;
@@ -30,12 +35,20 @@ public class Visita {
         this.paziente = paziente;
     }
 
-    public LocalDateTime getDataVisita() {
-        return dataVisita;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDataVisita(LocalDateTime dataVisita) {
-        this.dataVisita = dataVisita;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getOrario() {
+        return orario;
+    }
+
+    public void setOrario(LocalTime orario) {
+        this.orario = orario;
     }
 
     public String getSpecialista() {
@@ -74,11 +87,13 @@ public class Visita {
     public String toString() {
         return "Visita{" +
                 "paziente=" + paziente +
-                ", dataVisita=" + dataVisita +
+                ", data=" + data +
+                ", orario=" + orario +
                 ", specialista='" + specialista + '\'' +
                 ", tipoVisita='" + tipoVisita + '\'' +
                 ", motivoVisita='" + motivoVisita + '\'' +
                 ", stato='" + stato + '\'' +
                 '}';
     }
+
 }

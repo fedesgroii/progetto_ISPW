@@ -1,15 +1,14 @@
 package storage_db;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Logger;
-// sudo /usr/local/mysql/support-files/mysql.server start
+
 public class DatabaseConnection {
-    private static final String CONFIG_FILE = "dbconfig.properties";
     private static String url;
     private static String user;
     private static String password;
@@ -17,37 +16,41 @@ public class DatabaseConnection {
 
     // Static initialization block for loading configuration
     static {
-        try (FileInputStream fis = new FileInputStream(CONFIG_FILE)) {
+        try (InputStream input = DatabaseConnection.class.getClassLoader().getResourceAsStream("dbconfig.properties")) {
+            if (input == null) {
+                throw new IOException("File dbconfig.properties non trovato nel classpath.");
+            }
+
             Properties properties = new Properties();
-            properties.load(fis);
+            properties.load(input);
             url = properties.getProperty("db.url");
             user = properties.getProperty("db.user");
             password = properties.getProperty("db.password");
+            logger.info("Configurazione database caricata: url=" + url + ", user=" + user);
         } catch (IOException e) {
-            logger.severe("Failed to load configuration file: " + CONFIG_FILE);
-            throw new ConfigurationLoadException("Failed to load configuration file: " + CONFIG_FILE, e);
+            logger.severe("Impossibile caricare il file di configurazione: dbconfig.properties");
+            throw new ConfigurationLoadException("Impossibile caricare il file di configurazione: dbconfig.properties", e);
         }
     }
 
-    // Private constructor to prevent instantiation
     private DatabaseConnection() {
-        logger.info("DatabaseConnection constructor called.");
+        logger.info("Costruttore di DatabaseConnection chiamato.");
     }
 
-    // Method to get a connection
     public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
+            logger.info("Driver JDBC caricato correttamente.");
             return DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException e) {
-            String errorMessage = "JDBC driver not found: " + e.getMessage();
+            String errorMessage = "Driver JDBC non trovato: " + e.getMessage();
             logger.severe(errorMessage);
             throw new SQLException(errorMessage, e);
         }
     }
 }
 
-// Custom exception class for configuration loading errors
+// Classe eccezione custom per errori di caricamento della configurazione
 class ConfigurationLoadException extends RuntimeException {
     public ConfigurationLoadException(String message, Throwable cause) {
         super(message, cause);

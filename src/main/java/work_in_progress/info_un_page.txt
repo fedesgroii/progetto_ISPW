@@ -1,0 +1,15 @@
+// Pulsante che mostra la pagina "Functionality Unavailable"
+        Button unavailablePageButton = new Button("Mostra Funzionalità Non Disponibile");
+        unavailablePageButton.getStyleClass().add("button");
+        unavailablePageButton.setOnAction(event -> {
+
+
+            // Crea un nuovo stage per la schermata di funzionalità non disponibile
+            Stage unavailableStage = new Stage();
+            FunctionalityUnavailableController controller = new FunctionalityUnavailableController(primaryStage, unavailableStage);
+            FunctionalityUnavailableView view = new FunctionalityUnavailableView(unavailableStage, primaryStage, controller);
+            view.show(); // Mostra la pagina
+            primaryStage.hide(); // Nasconde la finestra principale
+
+
+        });

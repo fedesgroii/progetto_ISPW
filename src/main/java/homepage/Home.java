@@ -17,7 +17,7 @@ import session_manager.SessionManagerPaziente;
 
 
 public class Home extends Application {
-    SessionManagerPaziente gestore_sessione_pazienti = SessionManagerPaziente.getInstance();
+    Paziente gestore_sessione_pazienti = SessionManagerPaziente.getPazienteLoggato();
 
     @Override
     public void start(Stage primaryStage) {
@@ -93,7 +93,7 @@ public class Home extends Application {
         });
 
         shopButton.setOnAction(event -> {
-            Paziente paziente = gestore_sessione_pazienti.getPazienteLoggato();
+            Paziente paziente = SessionManagerPaziente.getPazienteLoggato();
             System.out.println("Nome "+paziente.getNome());
             System.out.println("Cognome "+paziente.getCognome());
         });

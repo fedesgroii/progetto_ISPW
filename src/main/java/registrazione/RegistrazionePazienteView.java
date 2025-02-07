@@ -43,6 +43,7 @@ public class RegistrazionePazienteView {
 
         Text subtitle = new Text("Inserisci i tuoi dati");
         subtitle.setId("subtitle");
+
         erroreGenerico = new Text(testoErrore);
         erroreGenerico.setId(ERRORE);
         erroreGenerico.setVisible(false);
@@ -117,7 +118,7 @@ public class RegistrazionePazienteView {
         backButton.setId("backButton");
         backButton.setOnAction(event -> primaryStage.close());
 
-        VBox vbox = new VBox(20, title, subtitle,errorTextNome, nomeField, errorTextCognome, cognomeField,errorTextDataDiNascita, dataDiNascitaField,errorTextNumeroTelefonico,numeroTelefonicoField,errorTextEmail,emailField, errorTextPassword,passwordField,errorTextCodiceFiscale,codiceFiscaleField,submitButton, backButton);
+        VBox vbox = new VBox(20, title, subtitle, erroreGenerico, errorTextNome, nomeField, errorTextCognome, cognomeField, errorTextDataDiNascita, dataDiNascitaField, errorTextNumeroTelefonico, numeroTelefonicoField, errorTextEmail, emailField, errorTextPassword, passwordField, errorTextCodiceFiscale, codiceFiscaleField, submitButton, backButton);
         vbox.setId("vbox");
         Scene scene = new Scene(vbox);
         // Carica il file CSS
@@ -195,14 +196,15 @@ public class RegistrazionePazienteView {
 
     // errore generico
     public void showGenericError(String text){
-        testoErrore = text;
+        erroreGenerico.setText(text); // Aggiorna il testo dell'errore
         erroreGenerico.setVisible(true);
     }
 
     public void hideGenericError(){
-        testoErrore = null;
+        erroreGenerico.setText(""); // Resetta il testo
         erroreGenerico.setVisible(false);
     }
+
     public void hideAllErrors() {
         errorTextNome.setVisible(false);
         errorTextCognome.setVisible(false);
