@@ -39,16 +39,18 @@ public class RegistrazionePazienteControllerApplicativo {
 
     // Metodo dedicato per validare i campi di input
     private boolean validateFields() {
-        // Esegue i controlli di validazione chiamando metodi helper
-        if (!controlloreGrafico.isValidNome()) return false;
-        if (!controlloreGrafico.isValidCognome()) return false;
-        if (!controlloreGrafico.isValidDataDiNascita()) return false;
-        if (!controlloreGrafico.isValidNumeroTelefonico()) return false;
-        if (!controlloreGrafico.isValidEmail()) return false;
-        if (!controlloreGrafico.isValidCodiceFiscale()) return false;
-        if (!controlloreGrafico.isValidPassword()) return false;
+        // Variabile per accumulare il risultato delle verifiche
+        boolean isValid = controlloreGrafico.isValidNome();
 
-        return true; // Restituisce true se tutti i campi sono validi
+        // Esegue i controlli di validazione chiamando metodi helper
+        if (!controlloreGrafico.isValidCognome()) isValid = false;
+        if (!controlloreGrafico.isValidDataDiNascita()) isValid = false;
+        if (!controlloreGrafico.isValidNumeroTelefonico()) isValid = false;
+        if (!controlloreGrafico.isValidEmail()) isValid = false;
+        if (!controlloreGrafico.isValidCodiceFiscale()) isValid = false;
+        if (!controlloreGrafico.isValidPassword()) isValid = false;
+
+        return isValid; // Restituisce il risultato finale
     }
 
     // Metodo dedicato per salvare il paziente in base all'opzione di storage

@@ -25,7 +25,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
             conn.setAutoCommit(true); // ✅ Abilita il commit automatico
-            setPazienteParameters(stmt, paziente, false);
+            setPazienteParameters(stmt, paziente);
 
             // ✅ Log dei dati prima dell'inserimento
             logger.log(Level.INFO, () -> "Tentativo di inserimento paziente: " + paziente);
@@ -59,7 +59,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
         Objects.requireNonNull(paziente, PAZIENTE_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY)) {
-            setPazienteParameters(stmt, paziente, true);
+            setPazienteParameters(stmt, paziente);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e, () -> "Errore durante l'aggiornamento del paziente: " + paziente.getCodiceFiscalePaziente());
@@ -94,7 +94,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
         return pazienti;
     }
 
-    private void setPazienteParameters(PreparedStatement stmt, Paziente paziente, boolean isUpdate) throws SQLException {
+    private void setPazienteParameters(PreparedStatement stmt, Paziente paziente) throws SQLException {
         stmt.setString(1, paziente.getNome());
         stmt.setString(2, paziente.getCognome());
         // ✅ Usa Timestamp se la colonna nel DB è DATETIME

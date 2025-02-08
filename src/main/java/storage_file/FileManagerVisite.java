@@ -1,10 +1,10 @@
 package storage_file;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Visita;
 import storage_db.DataStorageStrategy;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
@@ -20,11 +20,9 @@ public class FileManagerVisite implements DataStorageStrategy<Visita> {
     private static final String DIRECTORY = "src/main/resources/visite_salvate/"; // Directory di salvataggio
     private final ObjectMapper objectMapper; // Gestore JSON
     private static final Logger logger = Logger.getLogger(FileManagerVisite.class.getName()); // Logger per debugging
-
     // Formati per data e ora
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HHmm");
-
     // Lock per sincronizzazione multithread
     private final Object fileLock = new Object();
 
@@ -125,12 +123,13 @@ public class FileManagerVisite implements DataStorageStrategy<Visita> {
                 return false;
             }
             Path path = generaPercorsoFile(visita);
-            File file = path.toFile();
-            if (!file.exists()) {
-                logger.warning("File della visita non trovato per l'eliminazione: " + file.getName());
+            try {
+                Files.delete(path); // Usa Files#delete per migliorare i messaggi di errore
+                return true;
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Errore durante l'eliminazione della visita", e);
                 return false;
             }
-            return file.delete();
         }
     }
 
@@ -147,7 +146,7 @@ public class FileManagerVisite implements DataStorageStrategy<Visita> {
                 .filter(file -> file.getName().startsWith(codiceFiscalePaziente))
                 .map(this::leggiFile)
                 .flatMap(Optional::stream)
-                .collect(Collectors.toList());
+                .toList(); // Usa Stream.toList() invece di collect(Collectors.toList())
     }
 
     /**

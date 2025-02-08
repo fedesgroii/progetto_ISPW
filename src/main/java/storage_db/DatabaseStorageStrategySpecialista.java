@@ -26,7 +26,7 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
         Objects.requireNonNull(specialista, SPECIALISTA_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
-            setSpecialistaParameters(stmt, specialista, false);
+            setSpecialistaParameters(stmt, specialista);
             logger.info(() -> "Tentativo di inserimento specialista: " + specialista);
             return stmt.executeUpdate() > 0; // Controlla se almeno una riga è stata inserita
         } catch (SQLException e) {
@@ -105,7 +105,7 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
     /**
      * Imposta i parametri per lo specialista nel PreparedStatement durante l'inserimento.
      */
-    private void setSpecialistaParameters(PreparedStatement stmt, Specialista specialista, boolean isUpdate) throws SQLException {
+    private void setSpecialistaParameters(PreparedStatement stmt, Specialista specialista) throws SQLException {
         stmt.setString(1, specialista.getNome());
         stmt.setString(2, specialista.getCognome());
         stmt.setDate(3, Date.valueOf(specialista.getDataDiNascita()));

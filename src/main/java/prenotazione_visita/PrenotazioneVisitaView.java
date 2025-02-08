@@ -25,7 +25,7 @@ public class PrenotazioneVisitaView extends Application {
     private Text errorTextSpecialista;
     private Text errorTextTipoVisita;
     private Text errorTextMotivoVisita;
-    private final static String INPUT_FIELD = "inputField"; // ID comune assegnato agli input del form
+    private static final String INPUT_FIELD = "inputField"; // ID comune assegnato agli input del form
 
     @Override
     public void start(Stage primaryStage) {

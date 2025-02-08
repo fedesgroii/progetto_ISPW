@@ -1,10 +1,10 @@
 package storage_file;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Specialista;
 import storage_db.DataStorageStrategy;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -17,9 +17,10 @@ import java.util.logging.Logger;
 
 public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> {
     private static final String DIRECTORY = "src/main/resources/specialisti_salvati/";
+    private static final String FILE_EXTENSION = ".json"; // Definisci una costante per l'estensione del file
+
     private final ObjectMapper objectMapper;
     private static final Logger logger = Logger.getLogger(FileManagerSpecialisti.class.getName());
-
     // Lock per sincronizzazione multithread
     private final Object fileLock = new Object();
 
@@ -38,7 +39,7 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
         if (!isValid(specialista)) {
             throw new IllegalArgumentException("Specialista non valido");
         }
-        return specialista.getSpecializzazione().replaceAll("[^a-zA-Z0-9]", "_") + ".json";
+        return specialista.getSpecializzazione().replaceAll("[^a-zA-Z0-9]", "_") + FILE_EXTENSION; // Usa la costante FILE_EXTENSION
     }
 
     /**
@@ -64,15 +65,12 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
                 logger.warning("Tentativo di salvataggio di uno specialista non valido.");
                 return false;
             }
-
             Path path = generaPercorsoFile(specialista);
             File file = path.toFile();
-
             if (file.exists()) {
                 logger.warning("File già esistente per lo specialista: " + file.getName());
                 return false;
             }
-
             return scriviFile(file, specialista);
         }
     }
@@ -84,15 +82,12 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
                 logger.warning("Tentativo di ricerca di uno specialista non valido.");
                 return Optional.empty();
             }
-
             Path path = generaPercorsoFile(specialista);
             File file = path.toFile();
-
             if (!file.exists()) {
                 logger.warning("Specialista non trovato: " + file.getName());
                 return Optional.empty();
             }
-
             return leggiFile(file);
         }
     }
@@ -104,15 +99,12 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
                 logger.warning("Tentativo di aggiornamento di uno specialista non valido.");
                 return false;
             }
-
             Path path = generaPercorsoFile(specialista);
             File file = path.toFile();
-
             if (!file.exists()) {
                 logger.warning("File dello specialista non trovato per l'aggiornamento: " + file.getName());
                 return false;
             }
-
             return scriviFile(file, specialista);
         }
     }
@@ -124,16 +116,14 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
                 logger.warning("Tentativo di eliminazione di uno specialista non valido.");
                 return false;
             }
-
             Path path = generaPercorsoFile(specialista);
-            File file = path.toFile();
-
-            if (!file.exists()) {
-                logger.warning("File dello specialista non trovato per l'eliminazione: " + file.getName());
+            try {
+                Files.delete(path); // Usa Files#delete per migliorare i messaggi di errore
+                return true;
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Errore durante l'eliminazione dello specialista", e);
                 return false;
             }
-
-            return file.delete();
         }
     }
 
@@ -146,12 +136,11 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
             logger.warning("Directory degli specialisti non trovata o non valida.");
             return List.of();
         }
-
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
-                .filter(file -> file.getName().endsWith(".json"))
+                .filter(file -> file.getName().endsWith(FILE_EXTENSION)) // Usa la costante FILE_EXTENSION
                 .map(this::leggiFile)
                 .flatMap(Optional::stream)
-                .collect(Collectors.toList());
+                .toList(); // Usa Stream.toList() invece di collect(Collectors.toList())
     }
 
     /**
@@ -162,13 +151,11 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
             logger.warning("Specializzazione non valida per la ricerca.");
             return Optional.empty();
         }
-
-        File file = new File(DIRECTORY + specializzazione.replaceAll("[^a-zA-Z0-9]", "_") + ".json");
+        File file = new File(DIRECTORY + specializzazione.replaceAll("[^a-zA-Z0-9]", "_") + FILE_EXTENSION); // Usa la costante FILE_EXTENSION
         if (!file.exists()) {
             logger.warning("Specialista non trovato per la specializzazione: " + specializzazione);
             return Optional.empty();
         }
-
         return leggiFile(file);
     }
 
@@ -214,11 +201,10 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
         }
         // Cerca il file con l'email specificata
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
-                .filter(file -> file.getName().endsWith(".json")) // Filtra solo i file JSON
+                .filter(file -> file.getName().endsWith(FILE_EXTENSION)) // Usa la costante FILE_EXTENSION
                 .map(this::leggiFile) // Leggi il contenuto dei file
                 .flatMap(Optional::stream) // Gestisci i valori Optional
                 .filter(specialista -> specialista.getEmail().equalsIgnoreCase(email)) // Filtra per email
                 .findFirst(); // Restituisce il primo risultato trovato
     }
-
 }

@@ -1,13 +1,12 @@
 package storage_file;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import model.Paziente;
 import storage_db.DataStorageStrategy;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -20,9 +19,10 @@ import java.util.logging.Logger;
 
 public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
     private static final String DIRECTORY = "src/main/resources/pazienti_salvati/";
+    private static final String FILE_EXTENSION = ".json"; // Definisci una costante per l'estensione del file
+
     private final ObjectMapper objectMapper;
     private static final Logger logger = Logger.getLogger(FileManagerPazienti.class.getName());
-
     // Lock per sincronizzazione multithread
     private final Object fileLock = new Object();
 
@@ -31,7 +31,6 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
         // Creazione della directory se non esiste
         File dir = new File(DIRECTORY);
         if (!dir.exists() && !dir.mkdirs()) {
@@ -46,7 +45,7 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
         if (!isValid(paziente)) {
             throw new IllegalArgumentException("Paziente non valido");
         }
-        return paziente.getCodiceFiscalePaziente() + ".json";
+        return paziente.getCodiceFiscalePaziente() + FILE_EXTENSION; // Usa la costante FILE_EXTENSION
     }
 
     /**
@@ -124,12 +123,13 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
                 return false;
             }
             Path path = generaPercorsoFile(paziente);
-            File file = path.toFile();
-            if (!file.exists()) {
-                logger.warning("File del paziente non trovato per l'eliminazione: " + file.getName());
+            try {
+                Files.delete(path); // Usa Files#delete per migliorare i messaggi di errore
+                return true;
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Errore durante l'eliminazione del paziente", e);
                 return false;
             }
-            return file.delete();
         }
     }
 
@@ -143,10 +143,10 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
             return List.of();
         }
         return Arrays.stream(Objects.requireNonNull(dir.listFiles()))
-                .filter(file -> file.getName().endsWith(".json"))
+                .filter(file -> file.getName().endsWith(FILE_EXTENSION)) // Usa la costante FILE_EXTENSION
                 .map(this::leggiFile)
                 .flatMap(Optional::stream)
-                .collect(Collectors.toList());
+                .toList(); // Usa Stream.toList() invece di collect(Collectors.toList())
     }
 
     /**
@@ -177,20 +177,17 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
     }
 
     public static boolean trovaCodiceFiscaleNellaCartellaPazienti(String inputValue) {
-        final String FOLDER_PATH = "src/main/resources/pazienti_salvati/";
-        File folder = new File(FOLDER_PATH);
-
+        File folder = new File(DIRECTORY); // Usa la costante DIRECTORY
         if (!folder.exists() || !folder.isDirectory()) {
             logger.log(Level.SEVERE, "PATH cartella in cui cercare non valido");
             return false;
         }
-
         File[] files = folder.listFiles();
         if (files == null || files.length == 0) {
             logger.info("La cartella è vuota o non contiene file: {}");
             return false;
         }
-        inputValue = inputValue+".json";
+        inputValue = inputValue + FILE_EXTENSION; // Usa la costante FILE_EXTENSION
         String finalInputValue = inputValue;
         return Arrays.stream(files)
                 .filter(Objects::nonNull)
