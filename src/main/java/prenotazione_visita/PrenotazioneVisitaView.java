@@ -8,7 +8,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,7 @@ public class PrenotazioneVisitaView extends Application {
     private Text errorTextSpecialista;
     private Text errorTextTipoVisita;
     private Text errorTextMotivoVisita;
-    private final static String inputField = "inputField"; // ID comune assegnato agli input del form
+    private final static String INPUT_FIELD = "inputField"; // ID comune assegnato agli input del form
 
     @Override
     public void start(Stage primaryStage) {
@@ -107,7 +106,7 @@ public class PrenotazioneVisitaView extends Application {
 
     private DatePicker createDatePicker() {
         DatePicker localDatePicker = new DatePicker();
-        localDatePicker.setId(inputField);
+        localDatePicker.setId(INPUT_FIELD);
         return localDatePicker;
     }
 
@@ -115,7 +114,7 @@ public class PrenotazioneVisitaView extends Application {
         ComboBox<LocalTime> localTimeComboBox = new ComboBox<>();
         localTimeComboBox.setPromptText("Seleziona un orario");
         localTimeComboBox.setDisable(true);
-        localTimeComboBox.setId(inputField);
+        localTimeComboBox.setId(INPUT_FIELD);
         // Abilita la selezione dell'orario solo dopo aver scelto una data
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -145,13 +144,13 @@ public class PrenotazioneVisitaView extends Application {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPromptText("Seleziona " + label);
         comboBox.getItems().addAll(items);
-        comboBox.setId(inputField);
+        comboBox.setId(INPUT_FIELD);
         return comboBox;
     }
 
     private TextField createTextField() {
         TextField textField = new TextField();
-        textField.setId(inputField);
+        textField.setId(INPUT_FIELD);
         return textField;
     }
 

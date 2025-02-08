@@ -14,8 +14,11 @@ import model.Paziente;
 import prenotazione_visita.PrenotazioneVisitaView;
 import session_manager.SessionManagerPaziente;
 
+import java.util.logging.Logger;
+
 public class Home {
     private Paziente pazienteLoggato = SessionManagerPaziente.getPazienteLoggato();
+    private static final Logger LoggerHome = Logger.getLogger(Home.class.getName());
 
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home - MindLab");
@@ -91,8 +94,8 @@ public class Home {
         });
 
         shopButton.setOnAction(event -> {
-            System.out.println("Nome: " + pazienteLoggato.getNome());
-            System.out.println("Cognome: " + pazienteLoggato.getCognome());
+            LoggerHome.info("Nome: " + pazienteLoggato.getNome());
+            LoggerHome.info("Cognome: " + pazienteLoggato.getCognome());
         });
     }
 

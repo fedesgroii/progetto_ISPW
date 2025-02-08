@@ -8,7 +8,7 @@ import model.Specialista;
  */
 public class SessionManagerSpecialista {
     private static final AtomicReference<SessionManagerSpecialista> instance = new AtomicReference<>(); // Istanza Singleton thread-safe
-    private volatile Specialista specialistaLoggato; // Specialista loggato (volatile per visibilità thread)
+    private final AtomicReference<Specialista> specialistaLoggato = new AtomicReference<>(); // Specialista loggato (thread-safe)
     private final Object lock = new Object(); // Lucchetto per sincronizzazione
 
     // Costruttore privato
@@ -35,10 +35,10 @@ public class SessionManagerSpecialista {
      */
     public void setSpecialistaLoggato(Specialista specialista) {
         synchronized (lock) {
-            if (specialistaLoggato != null) {
+            if (specialistaLoggato.get() != null) {
                 throw new IllegalStateException("Login fallito: uno specialista è già loggato!");
             }
-            specialistaLoggato = specialista;
+            specialistaLoggato.set(specialista);
         }
     }
 
@@ -48,10 +48,11 @@ public class SessionManagerSpecialista {
      * @throws IllegalStateException Se nessuno è loggato
      */
     public Specialista getSpecialistaLoggato() {
-        if (specialistaLoggato == null) {
+        Specialista loggedSpecialista = specialistaLoggato.get();
+        if (loggedSpecialista == null) {
             throw new IllegalStateException("Nessuno specialista loggato. Effettua il login.");
         }
-        return specialistaLoggato;
+        return loggedSpecialista;
     }
 
     /**
@@ -59,7 +60,7 @@ public class SessionManagerSpecialista {
      */
     public void resetSession() {
         synchronized (lock) {
-            specialistaLoggato = null;
+            specialistaLoggato.set(null);
         }
     }
 
@@ -68,6 +69,6 @@ public class SessionManagerSpecialista {
      * @return true se loggato, false altrimenti
      */
     public boolean isLoggedIn() {
-        return specialistaLoggato != null;
+        return specialistaLoggato.get() != null;
     }
 }

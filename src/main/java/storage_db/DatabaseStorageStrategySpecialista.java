@@ -1,5 +1,4 @@
 package storage_db;
-
 import model.Specialista;
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.logging.Logger;
 public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<Specialista> {
     private static final Logger logger = Logger.getLogger(DatabaseStorageStrategySpecialista.class.getName());
 
+    // Definisci una costante per la stringa "Specialista non può essere null"
+    private static final String SPECIALISTA_NOT_NULL_MESSAGE = "Specialista non può essere null";
+
     // Query SQL con nomi di colonne corretti
     private static final String INSERT_QUERY = "INSERT INTO specialista (nome, cognome, dataDiNascita, numeroTelefonico, email, specializzazione, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_QUERY = "SELECT nome, cognome, dataDiNascita, numeroTelefonico, email, specializzazione, password FROM specialista WHERE nome = ? AND cognome = ? AND email = ?";
@@ -21,21 +23,21 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
 
     @Override
     public boolean salva(Specialista specialista) {
-        Objects.requireNonNull(specialista, "Specialista non può essere null");
+        Objects.requireNonNull(specialista, SPECIALISTA_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
             setSpecialistaParameters(stmt, specialista, false);
-            logger.info("Tentativo di inserimento specialista: " + specialista);
+            logger.info(() -> "Tentativo di inserimento specialista: " + specialista);
             return stmt.executeUpdate() > 0; // Controlla se almeno una riga è stata inserita
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'inserimento dello specialista: " + specialista.getNome(), e);
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'inserimento dello specialista: " + specialista.getNome());
             return false;
         }
     }
 
     @Override
     public Optional<Specialista> trova(Specialista specialista) {
-        Objects.requireNonNull(specialista, "Specialista non può essere null");
+        Objects.requireNonNull(specialista, SPECIALISTA_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_QUERY)) {
             stmt.setString(1, specialista.getNome());
@@ -47,14 +49,14 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante la ricerca dello specialista: {0}", specialista.getNome());
+            logger.log(Level.SEVERE, e, () -> "Errore durante la ricerca dello specialista: " + specialista.getNome());
         }
         return Optional.empty();
     }
 
     @Override
     public boolean aggiorna(Specialista specialista) {
-        Objects.requireNonNull(specialista, "Specialista non può essere null");
+        Objects.requireNonNull(specialista, SPECIALISTA_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY)) {
             setSpecialistaParametersForUpdate(stmt, specialista);
@@ -63,14 +65,14 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
             stmt.setString(7, specialista.getEmail());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'aggiornamento dello specialista: {0}", specialista.getNome());
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'aggiornamento dello specialista: " + specialista.getNome());
             return false;
         }
     }
 
     @Override
     public boolean elimina(Specialista specialista) {
-        Objects.requireNonNull(specialista, "Specialista non può essere null");
+        Objects.requireNonNull(specialista, SPECIALISTA_NOT_NULL_MESSAGE);
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(DELETE_QUERY)) {
             stmt.setString(1, specialista.getNome());
@@ -78,7 +80,7 @@ public class DatabaseStorageStrategySpecialista implements DataStorageStrategy<S
             stmt.setString(3, specialista.getEmail());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'eliminazione dello specialista: {0}", specialista.getNome());
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'eliminazione dello specialista: " + specialista.getNome());
             return false;
         }
     }

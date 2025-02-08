@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DatabaseConnection {
@@ -24,7 +25,12 @@ public class DatabaseConnection {
             url = properties.getProperty("db.url");
             user = properties.getProperty("db.user");
             password = properties.getProperty("db.password");
-            logger.info(String.format("Configurazione database caricata: url=%s, user=%s", url, user));
+
+            // Verifica se il logging a livello INFO è abilitato prima di formattare la stringa
+            if (logger.isLoggable(Level.INFO)) {
+                logger.info(String.format("Configurazione database caricata: url=%s, user=%s", url, user));
+            }
+
         } catch (IOException e) {
             logger.severe("Impossibile caricare il file di configurazione: dbconfig.properties");
             throw new ConfigurationLoadException("Impossibile caricare il file di configurazione: dbconfig.properties", e);

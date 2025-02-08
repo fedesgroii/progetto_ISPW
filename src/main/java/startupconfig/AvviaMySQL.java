@@ -28,7 +28,7 @@ public class AvviaMySQL {
             int exitCode = process.waitFor();
             logger.log(Level.INFO, "Processo terminato con codice: {0}", exitCode);
         } catch (IOException | InterruptedException e) {
-            logger.log(Level.SEVERE, "Errore durante l'esecuzione del comando: " + comando, e);
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'esecuzione del comando: " + comando);
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt(); // Rilancia l'interruzione
             }

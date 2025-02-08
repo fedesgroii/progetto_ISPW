@@ -1,5 +1,4 @@
 package prenotazione_visita;
-import javafx.scene.layout.GridPane;
 import model.Visita;
 import startupconfig.StartupSettingsEntity;
 import storage_db.DatabaseStorageStrategyVisita;

@@ -1,4 +1,5 @@
 package storage_db;
+
 import model.Paziente;
 import java.sql.*;
 import java.util.*;
@@ -7,12 +8,14 @@ import java.util.logging.Logger;
 
 public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Paziente> {
     private static final Logger logger = Logger.getLogger(DatabaseStorageStrategyPaziente.class.getName());
+
     // Query SQL con nomi di colonne corretti
     private static final String INSERT_QUERY = "INSERT INTO pazienti (nome, cognome, dataDiNascita, numeroTelefonico, email, numeroTesseraSanitaria, condizioniMediche, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_QUERY = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti WHERE numeroTesseraSanitaria=?";
     private static final String UPDATE_QUERY = "UPDATE pazienti SET nome = ?, cognome = ?, dataDiNascita = ?, numeroTelefonico = ?, email = ?, condizioniMediche = ?, password = ? WHERE numeroTesseraSanitaria = ?";
     private static final String DELETE_QUERY = "DELETE FROM pazienti WHERE numeroTesseraSanitaria = ?";
     private static final String SELECT_ALL_QUERY = "SELECT numeroTesseraSanitaria, nome, cognome, dataDiNascita, numeroTelefonico, email, condizioniMediche, password FROM pazienti";
+
     // Definisci una costante per la stringa "Paziente non può essere null"
     private static final String PAZIENTE_NOT_NULL_MESSAGE = "Paziente non può essere null";
 
@@ -23,12 +26,13 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
              PreparedStatement stmt = conn.prepareStatement(INSERT_QUERY)) {
             conn.setAutoCommit(true); // ✅ Abilita il commit automatico
             setPazienteParameters(stmt, paziente, false);
+
             // ✅ Log dei dati prima dell'inserimento
-            logger.info("Tentativo di inserimento paziente: " + paziente);
+            logger.log(Level.INFO, () -> "Tentativo di inserimento paziente: " + paziente);
+
             return stmt.executeUpdate() > 0; // ✅ Controlla se almeno una riga è stata inserita
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'inserimento del paziente: " + paziente.getCodiceFiscalePaziente() +
-                    ". Dettaglio: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'inserimento del paziente: " + paziente.getCodiceFiscalePaziente());
             return false;
         }
     }
@@ -45,7 +49,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante la ricerca del paziente: {0}", paziente.getCodiceFiscalePaziente());
+            logger.log(Level.SEVERE, e, () -> "Errore durante la ricerca del paziente: " + paziente.getCodiceFiscalePaziente());
         }
         return Optional.empty();
     }
@@ -58,7 +62,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
             setPazienteParameters(stmt, paziente, true);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'aggiornamento del paziente: {0}", paziente.getCodiceFiscalePaziente());
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'aggiornamento del paziente: " + paziente.getCodiceFiscalePaziente());
             return false;
         }
     }
@@ -71,7 +75,7 @@ public class DatabaseStorageStrategyPaziente implements DataStorageStrategy<Pazi
             stmt.setString(1, paziente.getCodiceFiscalePaziente());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante l'eliminazione del paziente: {0}", paziente.getCodiceFiscalePaziente());
+            logger.log(Level.SEVERE, e, () -> "Errore durante l'eliminazione del paziente: " + paziente.getCodiceFiscalePaziente());
             return false;
         }
     }

@@ -23,7 +23,6 @@ public class LoginAppController {
     private static final Logger logger = Logger.getLogger(LoginAppController.class.getName());
     private final StartupSettingsEntity config = StartupSettingsEntity.getInstance();
     private final LoginGraphicController controlloreGrafico;
-    private final LoginViewBase view;
     private final SessionManagerSpecialista gestoreSessioneSpecialista = SessionManagerSpecialista.getInstance();
 
     // Definizione delle costanti per "Patient" e "Specialist"
@@ -31,7 +30,6 @@ public class LoginAppController {
     private static final String SPECIALIST_TYPE = "Specialist";
 
     public LoginAppController(LoginViewBase view) {
-        this.view = view;
         this.controlloreGrafico = new LoginGraphicController(view);
     }
 

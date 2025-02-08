@@ -7,12 +7,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Classe utilitaria per l'esecuzione di operazioni sul database.
- * Fornisce metodi statici per l'esecuzione di query e aggiornamenti,
- * gestendo automaticamente la connessione, la preparazione degli statement
- * e la chiusura delle risorse.
- */
 public class DatabaseOperations {
     private static final Logger logger = Logger.getLogger(DatabaseOperations.class.getName());
 
@@ -45,7 +39,7 @@ public class DatabaseOperations {
             }
         } catch (SQLException e) {
             String errorMsg = "Errore esecuzione query: " + sql;
-            logger.log(Level.SEVERE, errorMsg, e);
+            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
             throw new DatabaseException(errorMsg, e);
         }
         return results;
@@ -66,7 +60,7 @@ public class DatabaseOperations {
             return stmt.executeUpdate();
         } catch (SQLException e) {
             String errorMsg = "Errore esecuzione update: " + sql;
-            logger.log(Level.SEVERE, errorMsg, e);
+            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
             throw new DatabaseException(errorMsg, e);
         }
     }
@@ -105,7 +99,9 @@ public class DatabaseOperations {
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Errore durante il rollback", ex);
             }
-            throw new DatabaseException("Transazione fallita", e);
+            String errorMsg = "Transazione fallita";
+            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
+            throw new DatabaseException(errorMsg, e);
         } finally {
             try {
                 if (conn != null) conn.close();

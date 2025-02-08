@@ -21,57 +21,68 @@ public class RegistrazionePazienteControllerApplicativo {
     }
 
     public boolean isValidInput() {
-        boolean result = true; // Variabile per verificare se ci sono errori nei dati immessi
-
-        // Esegue i controlli di validazione chiamando metodi helper
-        if (!controlloreGrafico.isValidNome()) result = false;
-        if (!controlloreGrafico.isValidCognome()) result = false;
-        if (!controlloreGrafico.isValidDataDiNascita()) result = false;
-        if (!controlloreGrafico.isValidNumeroTelefonico()) result = false;
-        if (!controlloreGrafico.isValidEmail()) result = false;
-        if (!controlloreGrafico.isValidCodiceFiscale()) result = false;
-        if (!controlloreGrafico.isValidPassword()) result = false;
-
-        // Se tutti i dati sono validi, crea e salva il paziente
-        if (result) {
-            Paziente paziente = createPaziente(); // Crea un nuovo paziente
-            if (paziente == null) {
-                return false; // Restituisce false se la creazione del paziente non è riuscita
-            }
-
-            int storageOption = config.getStorageOption(); // Ottiene l'opzione di salvataggio
-            switch (storageOption) {
-                case 1: // Salvataggio su Database
-                    if (isDuplicateInDatabase(paziente)) {
-                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
-                        return false;
-                    }
-                    view.hideGenericError();
-                    return pazienteDatabase.salva(paziente);
-
-                case 2: // Salvataggio su File System
-                    FileManagerPazienti fileManager = new FileManagerPazienti(); // Gestione file system
-                    if (FileManagerPazienti.trovaCodiceFiscaleNellaCartellaPazienti(paziente.getCodiceFiscalePaziente())) {
-                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
-                        return false;
-                    }
-                    view.hideGenericError();
-                    return fileManager.salva(paziente);
-
-                default: // Salvataggio in Lista (RAM)
-                    ListaPazienti pazienteLista = ListaPazienti.getIstanzaListaPazienti();
-                    if (isDuplicateInList(paziente, pazienteLista)) {
-                        controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
-                        return false;
-                    }
-                    view.hideGenericError();
-                    pazienteLista.aggiungiPaziente(paziente);
-                    return true;
-            }
+        // Verifica la validità dei campi di input chiamando un metodo dedicato
+        if (!validateFields()) {
+            view.showGenericError("Errore nell'inserimento dei dati.");
+            return false; // Restituisce false se ci sono errori nei campi
         }
 
-        view.showGenericError("Errore nell'inserimento dei dati.");
-        return false; // Restituisce false se c'è stato un errore
+        // Crea un nuovo paziente
+        Paziente paziente = createPaziente();
+        if (paziente == null) {
+            return false; // Restituisce false se la creazione del paziente fallisce
+        }
+
+        // Salva il paziente in base all'opzione di storage selezionata
+        return savePaziente(paziente);
+    }
+
+    // Metodo dedicato per validare i campi di input
+    private boolean validateFields() {
+        // Esegue i controlli di validazione chiamando metodi helper
+        if (!controlloreGrafico.isValidNome()) return false;
+        if (!controlloreGrafico.isValidCognome()) return false;
+        if (!controlloreGrafico.isValidDataDiNascita()) return false;
+        if (!controlloreGrafico.isValidNumeroTelefonico()) return false;
+        if (!controlloreGrafico.isValidEmail()) return false;
+        if (!controlloreGrafico.isValidCodiceFiscale()) return false;
+        if (!controlloreGrafico.isValidPassword()) return false;
+
+        return true; // Restituisce true se tutti i campi sono validi
+    }
+
+    // Metodo dedicato per salvare il paziente in base all'opzione di storage
+    private boolean savePaziente(Paziente paziente) {
+        int storageOption = config.getStorageOption(); // Ottiene l'opzione di salvataggio
+
+        switch (storageOption) {
+            case 1: // Salvataggio su Database
+                if (isDuplicateInDatabase(paziente)) {
+                    controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                    return false;
+                }
+                view.hideGenericError();
+                return pazienteDatabase.salva(paziente);
+
+            case 2: // Salvataggio su File System
+                FileManagerPazienti fileManager = new FileManagerPazienti(); // Gestione file system
+                if (FileManagerPazienti.trovaCodiceFiscaleNellaCartellaPazienti(paziente.getCodiceFiscalePaziente())) {
+                    controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                    return false;
+                }
+                view.hideGenericError();
+                return fileManager.salva(paziente);
+
+            default: // Salvataggio in Lista (RAM)
+                ListaPazienti pazienteLista = ListaPazienti.getIstanzaListaPazienti();
+                if (isDuplicateInList(paziente, pazienteLista)) {
+                    controlloreGrafico.duplicatedDatas(); // Mostra errore sull'interfaccia per dati duplicati
+                    return false;
+                }
+                view.hideGenericError();
+                pazienteLista.aggiungiPaziente(paziente);
+                return true;
+        }
     }
 
     private Paziente createPaziente() {
