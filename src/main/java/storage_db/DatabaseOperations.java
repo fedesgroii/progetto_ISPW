@@ -1,4 +1,5 @@
 package storage_db;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class DatabaseOperations {
                 }
             }
         } catch (SQLException e) {
-            String errorMsg = "Errore esecuzione query: " + sql;
+            String errorMsg = "Errore esecuzione query: " + sql + ", Parametri: " + formatParams(params);
             logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
             throw new DatabaseException(errorMsg, e);
         }
@@ -59,7 +60,7 @@ public class DatabaseOperations {
             setParameters(stmt, params);
             return stmt.executeUpdate();
         } catch (SQLException e) {
-            String errorMsg = "Errore esecuzione update: " + sql;
+            String errorMsg = "Errore esecuzione update: " + sql + ", Parametri: " + formatParams(params);
             logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
             throw new DatabaseException(errorMsg, e);
         }
@@ -95,20 +96,48 @@ public class DatabaseOperations {
             conn.commit();
         } catch (SQLException e) {
             try {
-                if (conn != null) conn.rollback();
+                if (conn != null) {
+                    conn.rollback();
+                }
             } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Errore durante il rollback", ex);
+                String rollbackErrorMsg = "Errore durante il rollback";
+                logger.log(Level.SEVERE, ex, () -> rollbackErrorMsg);
+                throw new DatabaseException(rollbackErrorMsg, ex);
             }
             String errorMsg = "Transazione fallita";
-            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
+            logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         } finally {
             try {
-                if (conn != null) conn.close();
+                if (conn != null) {
+                    conn.close();
+                }
             } catch (SQLException e) {
-                logger.log(Level.SEVERE, "Errore chiusura connessione", e);
+                String closeErrorMsg = "Errore chiusura connessione";
+                logger.log(Level.SEVERE, e, () -> closeErrorMsg);
+                throw new DatabaseException(closeErrorMsg, e);
             }
         }
+    }
+
+    /**
+     * Formatta i parametri per il logging.
+     *
+     * @param params i parametri da formattare
+     * @return una stringa rappresentante i parametri
+     */
+    private static String formatParams(Object... params) {
+        StringBuilder sb = new StringBuilder("[");
+        if (params != null && params.length > 0) {
+            for (int i = 0; i < params.length; i++) {
+                sb.append(params[i]);
+                if (i < params.length - 1) {
+                    sb.append(", ");
+                }
+            }
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     /**
