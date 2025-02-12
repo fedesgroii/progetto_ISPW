@@ -4,42 +4,47 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Specialista;
 
-import java.util.function.Supplier;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 public class ListaSpecialisti {
     private static final Logger logger = Logger.getLogger(ListaSpecialisti.class.getName());
 
-    // Lista osservabile di specialisti (utile per JavaFX)
+    // Uso di AtomicReference per la thread-safety del Singleton
+    private static final AtomicReference<ListaSpecialisti> istanzaListaSpecialisti = new AtomicReference<>();
+
+    // Lista thread-safe interna, esposta come ObservableList
     private final ObservableList<Specialista> observableListaSpecialisti;
 
-    // Istanza Singleton dichiarata volatile per garantire visibilità tra thread
-    private static volatile ListaSpecialisti istanzaListaSpecialisti;
-
-    // Costruttore privato per evitare istanziazioni multiple
+    // Costruttore privato per impedire istanziazioni esterne
     private ListaSpecialisti() {
-        observableListaSpecialisti = FXCollections.observableArrayList();
+        this.observableListaSpecialisti = FXCollections.observableList(new CopyOnWriteArrayList<>());
     }
 
-    // Metodo per ottenere l'istanza Singleton con double-checked locking
+    // Metodo per ottenere l'istanza Singleton in modo thread-safe
     public static ListaSpecialisti getIstanzaListaSpecialisti() {
-        if (istanzaListaSpecialisti == null) {
-            synchronized (ListaSpecialisti.class) {
-                if (istanzaListaSpecialisti == null) {
-                    istanzaListaSpecialisti = new ListaSpecialisti();
-                }
-            }
+        if (istanzaListaSpecialisti.get() == null) {
+            istanzaListaSpecialisti.compareAndSet(null, new ListaSpecialisti());
         }
-        return istanzaListaSpecialisti;
+        return istanzaListaSpecialisti.get();
     }
 
     // Metodo per aggiungere uno specialista alla lista
     public void aggiungiSpecialista(Specialista specialista) {
+        if (specialista == null) {
+            logger.warning("Tentativo di aggiungere uno specialista nullo.");
+            return;
+        }
         observableListaSpecialisti.add(specialista);
     }
 
     // Metodo per rimuovere uno specialista dalla lista (per email)
     public boolean rimuoviSpecialista(String email) {
+        if (email == null || email.isBlank()) {
+            logger.warning("Email non valida per la rimozione dello specialista.");
+            return false;
+        }
         return observableListaSpecialisti.removeIf(s -> s.getEmail().equalsIgnoreCase(email));
     }
 
@@ -48,12 +53,16 @@ public class ListaSpecialisti {
         if (observableListaSpecialisti.isEmpty()) {
             logger.info("Nessuno specialista registrato.");
         } else {
-            observableListaSpecialisti.forEach(specialista -> logger.info((Supplier<String>) specialista));
+            observableListaSpecialisti.forEach(specialista -> logger.info(specialista.toString()));
         }
     }
 
     // Metodo per trovare uno specialista per email
     public Specialista trovaSpecialista(String email) {
+        if (email == null || email.isBlank()) {
+            logger.warning("Email non valida per la ricerca dello specialista.");
+            return null;
+        }
         return observableListaSpecialisti.stream()
                 .filter(s -> s.getEmail().equalsIgnoreCase(email))
                 .findFirst()

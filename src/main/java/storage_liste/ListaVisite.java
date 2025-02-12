@@ -5,30 +5,30 @@ import javafx.collections.ObservableList;
 import model.Visita;
 
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 public class ListaVisite {
     private static final Logger logger = Logger.getLogger(ListaVisite.class.getName());
-    private final ObservableList<Visita> observableListaVisite;
 
-    // Variabile volatile per garantire la visibilità tra i thread
-    private static volatile ListaVisite istanzaListaVisite;
+    // Uso di AtomicReference per garantire la thread-safety del Singleton
+    private static final AtomicReference<ListaVisite> istanzaListaVisite = new AtomicReference<>();
+
+    // Lista thread-safe interna, che viene poi esposta come ObservableList
+    private final ObservableList<Visita> observableListaVisite;
 
     // Costruttore privato per impedire istanziazioni esterne
     private ListaVisite() {
-        observableListaVisite = FXCollections.observableArrayList();
+        this.observableListaVisite = FXCollections.observableList(new CopyOnWriteArrayList<>());
     }
 
-    // Metodo per ottenere l'istanza con "double-checked locking"
+    // Metodo per ottenere l'istanza Singleton in modo thread-safe
     public static ListaVisite getIstanzaListaVisite() {
-        if (istanzaListaVisite == null) {
-            synchronized (ListaVisite.class) {
-                if (istanzaListaVisite == null) {
-                    istanzaListaVisite = new ListaVisite();
-                }
-            }
+        if (istanzaListaVisite.get() == null) {
+            istanzaListaVisite.compareAndSet(null, new ListaVisite());
         }
-        return istanzaListaVisite;
+        return istanzaListaVisite.get();
     }
 
     // Metodo per aggiungere una visita alla lista
@@ -53,15 +53,21 @@ public class ListaVisite {
     }
 
     // Metodo per visualizzare la lista di visite
+    // Metodo per visualizzare la lista di visite
     public void visualizzaVisite() {
         if (observableListaVisite.isEmpty()) {
-            logger.info("Nessuna visita registrata.");
+            if (logger.isLoggable(java.util.logging.Level.INFO)) {
+                logger.info("Nessuna visita registrata.");
+            }
         } else {
             for (Visita visita : observableListaVisite) {
-                logger.info(visita.toString());
+                if (logger.isLoggable(java.util.logging.Level.INFO)) {
+                    logger.info(visita.toString());
+                }
             }
         }
     }
+
 
     // Metodo per trovare una visita per codice fiscale, data e orario
     public Optional<Visita> trovaVisita(String codiceFiscale, String data, String orario) {
