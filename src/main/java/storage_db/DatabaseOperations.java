@@ -1,5 +1,4 @@
 package storage_db;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class DatabaseOperations {
             }
         } catch (SQLException e) {
             String errorMsg = "Errore esecuzione query: " + sql + ", Parametri: " + formatParams(params);
-            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
+            logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         }
         return results;
@@ -61,7 +60,7 @@ public class DatabaseOperations {
             return stmt.executeUpdate();
         } catch (SQLException e) {
             String errorMsg = "Errore esecuzione update: " + sql + ", Parametri: " + formatParams(params);
-            logger.log(Level.SEVERE, e, () -> errorMsg); // Utilizzo di lambda per differire la concatenazione delle stringhe
+            logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         }
     }
