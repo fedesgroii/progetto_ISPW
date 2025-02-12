@@ -152,8 +152,9 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
         }
         File file = new File(DIRECTORY + specializzazione.replaceAll("[^a-zA-Z0-9]", "_") + FILE_EXTENSION);
         if (!file.exists()) {
-            // Utilizza la formattazione incorporata per costruire il messaggio di logging
-            logger.warning(String.format("Specialista non trovato per la specializzazione: %s", specializzazione));
+            if (logger.isLoggable(Level.WARNING)) {
+                logger.warning(String.format("Specialista non trovato per la specializzazione: %s", specializzazione));
+            }
             return Optional.empty();
         }
         return leggiFile(file);

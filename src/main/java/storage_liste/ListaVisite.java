@@ -4,45 +4,52 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Visita;
 
-import java.util.function.Supplier;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class ListaVisite {
     private static final Logger logger = Logger.getLogger(ListaVisite.class.getName());
-    // Lista osservabile di visite (utile per JavaFX)
     private final ObservableList<Visita> observableListaVisite;
 
-    // Variabile statica per contenere l'unica istanza della classe (Singleton)
-    private static ListaVisite istanzaListaVisite;
+    // Variabile volatile per garantire la visibilità tra i thread
+    private static volatile ListaVisite istanzaListaVisite;
 
-    // Costruttore privato per evitare istanziazioni multiple
+    // Costruttore privato per impedire istanziazioni esterne
     private ListaVisite() {
-        observableListaVisite = FXCollections.observableArrayList(); // Usando ObservableList
+        observableListaVisite = FXCollections.observableArrayList();
     }
 
-    // Metodo statico per ottenere l'unica istanza della classe
+    // Metodo per ottenere l'istanza con "double-checked locking"
     public static ListaVisite getIstanzaListaVisite() {
         if (istanzaListaVisite == null) {
-            istanzaListaVisite = new ListaVisite(); // Crea l'istanza solo se non esiste già
+            synchronized (ListaVisite.class) {
+                if (istanzaListaVisite == null) {
+                    istanzaListaVisite = new ListaVisite();
+                }
+            }
         }
         return istanzaListaVisite;
     }
 
     // Metodo per aggiungere una visita alla lista
     public void aggiungiVisita(Visita visita) {
+        if (visita == null) {
+            logger.warning("Tentativo di aggiungere una visita nulla.");
+            return;
+        }
         observableListaVisite.add(visita);
     }
 
-    // Metodo per rimuovere una visita dalla lista (per codice fiscale del paziente e data)
+    // Metodo per rimuovere una visita (identificata da codice fiscale, data e orario)
     public boolean rimuoviVisita(String codiceFiscale, String data, String orario) {
-        for (Visita visita : observableListaVisite) {
-            if (visita.getPaziente().getCodiceFiscalePaziente().equals(codiceFiscale) &&
-                    visita.getData().toString().equals(data) && visita.getOrario().toString().equals(orario)) {
-                observableListaVisite.remove(visita);
-                return true;
-            }
+        if (codiceFiscale == null || data == null || orario == null) {
+            logger.warning("Dati non validi per la rimozione della visita.");
+            return false;
         }
-        return false; // Visita non trovata
+        return observableListaVisite.removeIf(visita ->
+                visita.getPaziente().getCodiceFiscalePaziente().equalsIgnoreCase(codiceFiscale) &&
+                        visita.getData().toString().equals(data) &&
+                        visita.getOrario().toString().equals(orario));
     }
 
     // Metodo per visualizzare la lista di visite
@@ -51,20 +58,22 @@ public class ListaVisite {
             logger.info("Nessuna visita registrata.");
         } else {
             for (Visita visita : observableListaVisite) {
-                logger.info((Supplier<String>) visita);
+                logger.info(visita.toString());
             }
         }
     }
 
     // Metodo per trovare una visita per codice fiscale, data e orario
-    public Visita trovaVisita(String codiceFiscale, String data, String orario) {
-        for (Visita visita : observableListaVisite) {
-            if (visita.getPaziente().getCodiceFiscalePaziente().equals(codiceFiscale) &&
-                    visita.getData().toString().equals(data) && visita.getOrario().toString().equals(orario)) {
-                return visita;
-            }
+    public Optional<Visita> trovaVisita(String codiceFiscale, String data, String orario) {
+        if (codiceFiscale == null || data == null || orario == null) {
+            logger.warning("Dati non validi per la ricerca della visita.");
+            return Optional.empty();
         }
-        return null; // Visita non trovata
+        return observableListaVisite.stream()
+                .filter(visita -> visita.getPaziente().getCodiceFiscalePaziente().equalsIgnoreCase(codiceFiscale) &&
+                        visita.getData().toString().equals(data) &&
+                        visita.getOrario().toString().equals(orario))
+                .findFirst();
     }
 
     // Metodo per ottenere la lista osservabile di visite

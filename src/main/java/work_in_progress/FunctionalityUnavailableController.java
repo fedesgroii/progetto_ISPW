@@ -1,21 +1,20 @@
 package work_in_progress;
 
 import javafx.stage.Stage;
+import java.util.Optional;
 
 public class FunctionalityUnavailableController {
 
-    private final Stage previousStage;
+    private final Optional<Stage> previousStage;
     private final Stage currentStage;
 
     public FunctionalityUnavailableController(Stage previousStage, Stage currentStage) {
-        this.previousStage = previousStage;
+        this.previousStage = Optional.ofNullable(previousStage);
         this.currentStage = currentStage;
     }
 
     public void handleBackButton() {
-        if (previousStage != null) {
-            previousStage.show(); // Mostra la finestra precedente
-        }
-        currentStage.close(); // Chiude la finestra corrente
+        previousStage.ifPresent(Stage::show);
+        currentStage.close();
     }
 }

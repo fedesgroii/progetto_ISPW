@@ -9,21 +9,26 @@ import java.util.logging.Logger;
 
 public class ListaSpecialisti {
     private static final Logger logger = Logger.getLogger(ListaSpecialisti.class.getName());
+
     // Lista osservabile di specialisti (utile per JavaFX)
     private final ObservableList<Specialista> observableListaSpecialisti;
 
-    // Variabile statica per contenere l'unica istanza della classe (Singleton)
-    private static ListaSpecialisti istanzaListaSpecialisti;
+    // Istanza Singleton dichiarata volatile per garantire visibilità tra thread
+    private static volatile ListaSpecialisti istanzaListaSpecialisti;
 
     // Costruttore privato per evitare istanziazioni multiple
     private ListaSpecialisti() {
-        observableListaSpecialisti = FXCollections.observableArrayList(); // Usando ObservableList
+        observableListaSpecialisti = FXCollections.observableArrayList();
     }
 
-    // Metodo statico per ottenere l'unica istanza della classe
+    // Metodo per ottenere l'istanza Singleton con double-checked locking
     public static ListaSpecialisti getIstanzaListaSpecialisti() {
         if (istanzaListaSpecialisti == null) {
-            istanzaListaSpecialisti = new ListaSpecialisti(); // Crea l'istanza solo se non esiste già
+            synchronized (ListaSpecialisti.class) {
+                if (istanzaListaSpecialisti == null) {
+                    istanzaListaSpecialisti = new ListaSpecialisti();
+                }
+            }
         }
         return istanzaListaSpecialisti;
     }
@@ -35,13 +40,7 @@ public class ListaSpecialisti {
 
     // Metodo per rimuovere uno specialista dalla lista (per email)
     public boolean rimuoviSpecialista(String email) {
-        for (Specialista specialista : observableListaSpecialisti) {
-            if (specialista.getEmail().equalsIgnoreCase(email)) {
-                observableListaSpecialisti.remove(specialista);
-                return true;
-            }
-        }
-        return false; // Specialista non trovato
+        return observableListaSpecialisti.removeIf(s -> s.getEmail().equalsIgnoreCase(email));
     }
 
     // Metodo per visualizzare la lista di specialisti
@@ -49,20 +48,16 @@ public class ListaSpecialisti {
         if (observableListaSpecialisti.isEmpty()) {
             logger.info("Nessuno specialista registrato.");
         } else {
-            for (Specialista specialista : observableListaSpecialisti) {
-                logger.info((Supplier<String>) specialista);
-            }
+            observableListaSpecialisti.forEach(specialista -> logger.info((Supplier<String>) specialista));
         }
     }
 
     // Metodo per trovare uno specialista per email
     public Specialista trovaSpecialista(String email) {
-        for (Specialista specialista : observableListaSpecialisti) {
-            if (specialista.getEmail().equalsIgnoreCase(email)) {
-                return specialista;
-            }
-        }
-        return null; // Specialista non trovato
+        return observableListaSpecialisti.stream()
+                .filter(s -> s.getEmail().equalsIgnoreCase(email))
+                .findFirst()
+                .orElse(null);
     }
 
     // Metodo per ottenere la lista osservabile di specialisti
