@@ -1,5 +1,4 @@
 package work_in_progress;
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,19 +15,17 @@ public class FunctionalityUnavailableView {
     private static final int ICON_SIZE = 125; // Dimensione dell'icona
     private static final int SCENE_WIDTH = 500; // Larghezza della scena
     private static final int SCENE_HEIGHT = 400; // Altezza della scena
-
     private static final String MESSAGE_TEXT = "Ci scusiamo, ma questa funzionalità è in fase di costruzione.";
     private static final String DESCRIPTION_TEXT = "Stiamo lavorando per offrirti questa funzionalità al più presto. Torna a trovarci!";
     private static final String BACK_BUTTON_TEXT = "Torna alla pagina principale";
-
     private final Stage primaryStage;
     private final Stage previousStage;
     private final FunctionalityUnavailableController controller;
 
-    public FunctionalityUnavailableView(Stage primaryStage, Stage previousStage, FunctionalityUnavailableController controller) {
+    public FunctionalityUnavailableView(Stage primaryStage, Stage previousStage) {
         this.primaryStage = primaryStage;
         this.previousStage = previousStage;
-        this.controller = controller;
+        this.controller = new FunctionalityUnavailableController(previousStage, primaryStage);
     }
 
     public void start() {
