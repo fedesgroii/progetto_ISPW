@@ -38,7 +38,7 @@ public class DatabaseOperations {
                 }
             }
         } catch (SQLException e) {
-            String errorMsg = "Errore esecuzione query: " + sql + ", Parametri: " + formatParams(params);
+            String errorMsg = "Errore esecuzione query: " + sql + ", Parametri: " + formatParams(params) + ". Dettagli: " + e.getMessage();
             logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         }
@@ -59,7 +59,7 @@ public class DatabaseOperations {
             setParameters(stmt, params);
             return stmt.executeUpdate();
         } catch (SQLException e) {
-            String errorMsg = "Errore esecuzione update: " + sql + ", Parametri: " + formatParams(params);
+            String errorMsg = "Errore esecuzione update: " + sql + ", Parametri: " + formatParams(params) + ". Dettagli: " + e.getMessage();
             logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         }
@@ -99,22 +99,21 @@ public class DatabaseOperations {
                     conn.rollback();
                 }
             } catch (SQLException ex) {
-                String rollbackErrorMsg = "Errore durante il rollback";
+                String rollbackErrorMsg = "Errore durante il rollback. Dettagli: " + ex.getMessage();
                 logger.log(Level.SEVERE, ex, () -> rollbackErrorMsg);
                 throw new DatabaseException(rollbackErrorMsg, ex);
             }
-            String errorMsg = "Transazione fallita";
+            String errorMsg = "Transazione fallita. Dettagli: " + e.getMessage();
             logger.log(Level.SEVERE, e, () -> errorMsg);
             throw new DatabaseException(errorMsg, e);
         } finally {
-            try {
-                if (conn != null) {
+            if (conn != null) {
+                try {
                     conn.close();
+                } catch (SQLException e) {
+                    String closeErrorMsg = "Errore chiusura connessione. Dettagli: " + e.getMessage();
+                    logger.log(Level.SEVERE, e, () -> closeErrorMsg);
                 }
-            } catch (SQLException e) {
-                String closeErrorMsg = "Errore chiusura connessione";
-                logger.log(Level.SEVERE, e, () -> closeErrorMsg);
-                throw new DatabaseException(closeErrorMsg, e);
             }
         }
     }
