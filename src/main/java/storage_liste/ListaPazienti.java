@@ -66,8 +66,24 @@ public class ListaPazienti {
         }
         return null; // Paziente non trovato
     }
+
+    public boolean isDuplicateInList(Paziente paziente, ListaPazienti pazienteLista) {
+        // Controlla duplicati nella lista
+        for (Paziente p : pazienteLista.getObservableListaPazienti()) {
+            if ((p.getEmail() != null && paziente.getEmail() != null && p.getEmail().equalsIgnoreCase(paziente.getEmail())) ||
+                    (p.getNumeroTelefonico() != null && paziente.getNumeroTelefonico() != null && p.getNumeroTelefonico().equalsIgnoreCase(paziente.getNumeroTelefonico())) ||
+                    (p.getCodiceFiscalePaziente() != null && paziente.getCodiceFiscalePaziente() != null && p.getCodiceFiscalePaziente().equalsIgnoreCase(paziente.getCodiceFiscalePaziente()))) {
+                return true; // Restituisce true se ci sono duplicati
+            }
+        }
+        return false;
+    }
+
 // **Metodo per ottenere la lista osservabile di pazienti**
     public ObservableList<Paziente> getObservableListaPazienti() {
         return observableListaPazienti;
     }
+
+
+
 }

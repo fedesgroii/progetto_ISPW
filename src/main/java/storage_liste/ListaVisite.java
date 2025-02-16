@@ -53,7 +53,6 @@ public class ListaVisite {
     }
 
     // Metodo per visualizzare la lista di visite
-    // Metodo per visualizzare la lista di visite
     public void visualizzaVisite() {
         if (observableListaVisite.isEmpty()) {
             if (logger.isLoggable(java.util.logging.Level.INFO)) {

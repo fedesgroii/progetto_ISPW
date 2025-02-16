@@ -1,5 +1,6 @@
 package startupconfig;
 
+import interfaccia_specialista.SpecialistDashboardView;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

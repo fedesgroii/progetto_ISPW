@@ -36,7 +36,7 @@ public class RegistrazionePazienteView {
     private static final String ERRORE = "errorText";
 
     public void start(Stage primaryStage) {
-        final RegistrazionePazienteControllerApplicativo controllerApplicativo = new RegistrazionePazienteControllerApplicativo(this);
+        final RegistrazionePazienteControllerGrafico controllerGrafico = new RegistrazionePazienteControllerGrafico(this);
 
         Text title = new Text("Registrazione");
         title.setId("title");
@@ -107,7 +107,7 @@ public class RegistrazionePazienteView {
         Button submitButton = new Button("Registrati");
         submitButton.setId("specialistButton");
         submitButton.setOnAction(event -> {
-            if (controllerApplicativo.isValidInput()) {
+            if (controllerGrafico.isValidInput()) {
                 LoginViewPatient patientView = new LoginViewPatient();
                 patientView.start(new Stage());
                 primaryStage.close();

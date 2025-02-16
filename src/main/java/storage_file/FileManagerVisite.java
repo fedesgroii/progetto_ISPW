@@ -174,4 +174,8 @@ public class FileManagerVisite implements DataStorageStrategy<Visita> {
             return Optional.empty();
         }
     }
+
+    public static String getFolderPath() {
+        return DIRECTORY;
+    }
 }

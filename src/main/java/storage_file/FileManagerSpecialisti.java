@@ -208,4 +208,8 @@ public class FileManagerSpecialisti implements DataStorageStrategy<Specialista> 
                 .filter(specialista -> specialista.getEmail().equalsIgnoreCase(email)) // Filtra per email
                 .findFirst(); // Restituisce il primo risultato trovato
     }
+
+    public static String getFolderPath() {
+        return DIRECTORY;
+    }
 }

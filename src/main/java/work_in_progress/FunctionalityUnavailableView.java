@@ -19,12 +19,10 @@ public class FunctionalityUnavailableView {
     private static final String DESCRIPTION_TEXT = "Stiamo lavorando per offrirti questa funzionalità al più presto. Torna a trovarci!";
     private static final String BACK_BUTTON_TEXT = "Torna alla pagina principale";
     private final Stage primaryStage;
-    private final Stage previousStage;
     private final FunctionalityUnavailableController controller;
 
     public FunctionalityUnavailableView(Stage primaryStage, Stage previousStage) {
         this.primaryStage = primaryStage;
-        this.previousStage = previousStage;
         this.controller = new FunctionalityUnavailableController(previousStage, primaryStage);
     }
 

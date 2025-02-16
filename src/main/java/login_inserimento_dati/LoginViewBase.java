@@ -22,17 +22,20 @@ public abstract class LoginViewBase {
     private static final String COLOR_CSS_SUFFIX = "a_colori.css";
     private static final String BN_CSS_SUFFIX = "bn.css";
     private static final int ERROR_TIMEOUT_SECONDS = 5;
-
+    private final LoginGraphicController grafCon = new LoginGraphicController(this);
     private Text errorText;
     private TextField emailField;
     private PasswordField passwordField;
-    private final LoginAppController controllerApplicativo = new LoginAppController(this);
+    private Stage primaryStage;
 
     protected abstract String getTipo();
+
     protected abstract String getTitleText();
+
     protected abstract String getSubtitleText();
 
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         StartupSettingsEntity config = StartupSettingsEntity.getInstance();
 
         Text title = new Text(getTitleText());
@@ -76,43 +79,16 @@ public abstract class LoginViewBase {
     private Scene getScene(Stage primaryStage, Text title, Text subtitle) {
         Button loginButton = new Button("Accedi");
         loginButton.setId("specialistButton");
-        loginButton.setOnAction(event -> handleLoginAttempt());
+        loginButton.setOnAction(event -> grafCon.handleLoginAttempt(getTipo()));
 
+        /*
         Button backButton = new Button("Scegli come accedere");
         backButton.setId("backButton");
-        backButton.setOnAction(event -> handleBackAction(primaryStage));
+        backButton.setOnAction(event -> handleBackAction(primaryStage));*/
 
-        VBox vbox = new VBox(20, title, subtitle, errorText, emailField, passwordField, loginButton, backButton);
+        VBox vbox = new VBox(20, title, subtitle, errorText, emailField, passwordField, loginButton);
         vbox.setId("vbox");
         return new Scene(vbox);
-    }
-
-    private void handleLoginAttempt() {
-        String email = emailField.getText().trim();
-        String password = passwordField.getText();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            showError();
-        } else {
-            boolean esito = controllerApplicativo.checkCredentials(getTipo(), email, password);
-            if (!esito) {
-                showError();
-            } else {
-                handleSuccessfulLogin();
-            }
-        }
-    }
-
-    private void handleBackAction(Stage primaryStage) {
-        Stage loginStage = new Stage();
-        new LoginView().start(loginStage);
-        primaryStage.close();
-    }
-
-    private void handleSuccessfulLogin() {
-        LOGGER.log(Level.INFO,
-                "Login effettuato con successo per l''utente: {0}", emailField.getText());
-        // DA IMPLEMENTARE: logica post-login
     }
 
     public void showError() {
@@ -128,5 +104,17 @@ public abstract class LoginViewBase {
 
     public TextField getEmailField() {
         return emailField;
+    }
+
+    /**
+     * Chiude la finestra corrente.
+     */
+    public void closeView() {
+        if (primaryStage != null) {
+            primaryStage.close();
+            LOGGER.log(Level.INFO, "Finestra di login chiusa con successo.");
+        } else {
+            LOGGER.log(Level.WARNING, "Impossibile chiudere la finestra: primaryStage non inizializzata.");
+        }
     }
 }

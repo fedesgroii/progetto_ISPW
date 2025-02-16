@@ -196,4 +196,7 @@ public class FileManagerPazienti implements DataStorageStrategy<Paziente> {
                     return match;
                 });
     }
+    public static String getFolderPath() {
+        return DIRECTORY;
+    }
 }

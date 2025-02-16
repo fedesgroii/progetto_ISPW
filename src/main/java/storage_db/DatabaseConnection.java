@@ -1,4 +1,5 @@
 package storage_db;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -14,7 +15,7 @@ public class DatabaseConnection {
     private static String password;
     private static final Logger logger = Logger.getLogger(DatabaseConnection.class.getName());
 
-    // Static initialization block for loading configuration
+    // Blocco di inizializzazione statico per caricare la configurazione
     static {
         try (InputStream input = DatabaseConnection.class.getClassLoader().getResourceAsStream("dbconfig.properties")) {
             if (input == null) {
@@ -26,37 +27,47 @@ public class DatabaseConnection {
             user = properties.getProperty("db.user");
             password = properties.getProperty("db.password");
 
-            // Verifica se il logging a livello INFO è abilitato prima di formattare la stringa
-            if (logger.isLoggable(Level.INFO)) {
-                logger.info(String.format("Configurazione database caricata: url=%s, user=%s", url, user));
-            }
-
+            logger.info("Configurazione database caricata con successo.");
         } catch (IOException e) {
-            logger.severe("Impossibile caricare il file di configurazione: dbconfig.properties");
+            logger.log(Level.SEVERE, "Errore nel caricamento del file di configurazione: dbconfig.properties", e);
             throw new ConfigurationLoadException("Impossibile caricare il file di configurazione: dbconfig.properties", e);
         }
     }
 
+    // Costruttore privato per impedire l'istanziazione
     private DatabaseConnection() {
-        logger.info("Costruttore di DatabaseConnection chiamato.");
+        logger.fine("Costruttore di DatabaseConnection chiamato.");
     }
 
+    /**
+     * Restituisce una connessione al database.
+     *
+     * @return Connessione al database
+     * @throws SQLException in caso di errore durante la connessione
+     */
     public static Connection getConnection() throws SQLException {
         try {
+            logger.fine("Tentativo di caricamento del driver JDBC...");
             Class.forName("com.mysql.cj.jdbc.Driver");
-            logger.info("Driver JDBC caricato correttamente.");
-            return DriverManager.getConnection(url, user, password);
+            logger.fine("Driver JDBC caricato correttamente.");
+
+            logger.info("Tentativo di connessione al database...");
+            Connection conn = DriverManager.getConnection(url, user, password);
+            logger.info("Connessione al database riuscita.");
+            return conn;
         } catch (ClassNotFoundException e) {
-            String errorMessage = "Driver JDBC non trovato: " + e.getMessage();
-            logger.severe(errorMessage);
-            throw new SQLException(errorMessage, e);
+            logger.log(Level.SEVERE, "Driver JDBC non trovato", e);
+            throw new SQLException("Driver JDBC non trovato", e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Errore durante la connessione al database", e);
+            throw e;
         }
     }
-}
 
-// Classe eccezione custom per errori di caricamento della configurazione
-class ConfigurationLoadException extends RuntimeException {
-    public ConfigurationLoadException(String message, Throwable cause) {
-        super(message, cause);
+    // Classe eccezione custom per errori di caricamento della configurazione
+    public static class ConfigurationLoadException extends RuntimeException {
+        public ConfigurationLoadException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

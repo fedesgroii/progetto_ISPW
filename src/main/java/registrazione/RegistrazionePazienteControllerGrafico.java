@@ -1,4 +1,6 @@
 package registrazione;
+import model.Paziente;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -8,8 +10,63 @@ import java.util.logging.Logger;
 
 public class RegistrazionePazienteControllerGrafico {
     private final RegistrazionePazienteView view;
+    private final RegistrazionePazienteControllerApplicativo appController = new RegistrazionePazienteControllerApplicativo();
     public RegistrazionePazienteControllerGrafico(RegistrazionePazienteView view) {
         this.view = view;
+    }
+
+    public boolean isValidInput() {
+        // Verifica la validità dei campi di ingresso chiamando un metodo dedicato
+        if (!validateFields()) {
+            view.showGenericError("Errore nell'inserimento dei dati.");
+            return false; // Restituisce false se ci sono errori nei campi
+        }
+
+        try {
+            // Creazione di un oggetto RegistrazionePazienteBean con i dati inseriti dall'utente
+            RegistrazionePazienteBean registrazionePazienteBean = new RegistrazionePazienteBean(
+                    view.nomeField.getText(), // Nome
+                    view.cognomeField.getText(), // Cognome
+                    LocalDate.parse(view.dataDiNascitaField.getText(),
+                            DateTimeFormatter.ofPattern("dd/MM/yyyy")), // Data di nascita già validata
+                    view.numeroTelefonicoField.getText(), // Numero telefonico
+                    view.emailField.getText(), // Email
+                    view.codiceFiscaleField.getText(), // Codice fiscale
+                    view.passwordField.getText() // Password
+            );
+
+            // Passa l'oggetto RegistrazionePazienteBean a un metodo per creare il Paziente
+            Paziente paziente = appController.createPaziente(registrazionePazienteBean);
+
+            // Verifica se il paziente è stato creato correttamente
+            if (paziente == null) {
+                view.showGenericError("Errore nella creazione del paziente.");
+                return false;
+            }
+
+            return appController.savePaziente(paziente);
+
+        } catch (Exception e) {
+            // Gestione di eventuali errori imprevisti
+            view.showGenericError("Errore imprevisto durante la registrazione.");
+            return false;
+        }
+    }
+
+    // Metodo dedicato per validare i campi di input
+    private boolean validateFields() {
+        // Variabile per accumulare il risultato delle verifiche
+        boolean isValid = isValidNome();
+
+        // Esegue i controlli di validazione chiamando metodi helper
+        if (!isValidCognome()) isValid = false;
+        if (!isValidDataDiNascita()) isValid = false;
+        if (!isValidNumeroTelefonico()) isValid = false;
+        if (!isValidEmail()) isValid = false;
+        if (!isValidCodiceFiscale()) isValid = false;
+        if (!isValidPassword()) isValid = false;
+
+        return isValid; // Restituisce il risultato finale
     }
     protected boolean isValidNome() {
         if (view.nomeField.getText() == null || view.nomeField.getText().isEmpty()) {
@@ -117,7 +174,7 @@ public class RegistrazionePazienteControllerGrafico {
         view.hideErrorPassword();
         return true;
     }
-    protected void duplicatedDatas(){
+    protected void duplicatedDatasErrorMessage(){
         view.showGenericError("Alcuni di questi dati risultano già registrati"); // Mostra un messaggio di errore per duplicati
     }
 }
